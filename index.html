@@ -1,0 +1,796 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pitch Rise – Retro Soccer Career</title>
+<meta name="theme-color" content="#0b3d1e">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Pitch Rise">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b3d1e;--bg2:#0f5a2b;--ac:#ffd23f;--tx:#f4fff4;--card:#0a2a15;--ln:#2e8b4f;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}html,body{margin:0;height:100dvh;overflow:hidden;overscroll-behavior:none}
+body{background:radial-gradient(circle at 50% 40%,#10281a,#020805);color:var(--tx);font:15px/1.4 ui-monospace,Menlo,Consolas,monospace;display:flex;justify-content:center;align-items:center;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+#app{width:100%;height:100%;padding:12px;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;background:repeating-linear-gradient(90deg,var(--bg) 0 40px,var(--bg2) 40px 80px)}
+@media(min-width:768px){#app{max-width:480px;height:90vh;border:8px solid #1a1a1a;border-radius:30px;box-shadow:0 0 0 3px #444,0 24px 70px #000}}
+h1,h2,.px{font-family:'Press Start 2P',ui-monospace,monospace;line-height:1.5}
+h1{font-size:18px;color:var(--ac);text-align:center;margin:10px 0 14px;text-shadow:3px 3px #000}
+h2{font-size:12px;color:var(--ac);margin:0 0 8px}
+.card{background:var(--card);border:3px solid var(--ln);border-radius:6px;padding:12px;margin-bottom:12px;box-shadow:0 4px 0 #000a}
+button{font-family:'Press Start 2P',ui-monospace,monospace;font-size:11px;line-height:1.4;background:var(--ac);color:#222;border:0;border-bottom:4px solid #b8860b;border-radius:4px;padding:13px;width:100%;min-height:48px;margin:6px 0;cursor:pointer;touch-action:manipulation}
+button:active{transform:translateY(2px)}button.s{background:#2e8b4f;color:#fff;border-color:#1b5e33}button:disabled{opacity:.4}
+input,select{width:100%;padding:10px;margin:4px 0 10px;background:#06200f;color:var(--tx);border:2px solid var(--ln);border-radius:4px;font:inherit}
+.row{display:flex;gap:8px;align-items:center;justify-content:space-between}
+.pos{display:grid;grid-template-columns:1fr 1fr;gap:8px}.pos button{font-size:10px;padding:14px 6px}.pos button.on{background:#fff;border-color:#999}
+.bar{height:10px;background:#06200f;border-radius:5px;overflow:hidden;margin-bottom:6px}.bar i{display:block;height:100%;background:var(--ac)}
+table{width:100%;border-collapse:collapse;font-size:12px}td,th{padding:5px 2px;text-align:center}td:nth-child(2),th:nth-child(2){text-align:left}tr.me{color:var(--ac);font-weight:700}
+#tick{height:150px;overflow:hidden;font-size:13px}#tick p{margin:3px 0}
+canvas{width:100%;display:block;border:3px solid #fff;border-radius:4px;touch-action:manipulation}
+.score{font-family:'Press Start 2P',monospace;font-size:24px;text-align:center;margin:8px 0}
+.hidden{display:none}small{opacity:.8}canvas{touch-action:none}
+section{display:flex;flex-direction:column;flex:1;min-height:0}section>*{flex-shrink:0}#app>.row{flex-shrink:0}
+#hub>p{margin-top:auto!important}#create>#go{margin-top:auto}
+#match{overflow:hidden;justify-content:space-between;padding-bottom:env(safe-area-inset-bottom,0px)}
+#match .card{padding:6px 10px;margin-bottom:6px}#match .score{font-size:18px;margin:2px 0}#match .bar{margin-bottom:0}
+#match #tick{order:2;height:auto;flex:1 1 auto;min-height:56px;max-height:130px;font-size:12px}#match #tick p{margin:2px 0}
+#match.mm #tick{flex:0 0 auto;min-height:0;max-height:58px}
+#mom{order:3}#mom:not(.hidden){display:flex;flex-direction:column;flex:1 1 auto;min-height:0;margin-top:auto}
+#mom h2{font-size:10px;margin:0 0 2px}#mom p{font-size:12px;margin:0 0 4px!important}
+#cv{flex:1 1 0;min-height:110px;max-height:170px;width:auto;max-width:100%;aspect-ratio:320/200;align-self:center}
+#mom .ctl{margin:8px 0 max(env(safe-area-inset-bottom,0px),8px);flex-shrink:0}#mom .ctl button{min-height:52px}
+#res{order:4;margin-top:auto}
+.ctl{display:flex;gap:8px;margin-top:8px}.ctl button{margin:0;min-height:56px}
+#modal,#lm,#tm{position:fixed;inset:0;background:#000c;display:flex;align-items:center;justify-content:center;z-index:9;padding:20px}#modal.hidden,#lm.hidden,#tm.hidden{display:none}#modal .card,#lm .card,#tm .card{max-height:85vh;overflow:auto;width:100%;max-width:380px;margin:0}#tm .card .card{margin:6px 0;max-height:none}.lgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}.lgrid button{margin:0;font-size:9px;padding:8px}
+tr.z1 td:first-child{border-left:5px solid #3b82f6}tr.z2 td:first-child{border-left:5px solid #f97316}tr.z3 td:first-child{border-left:5px solid #14b8a6}tr.za td:first-child{border-left:5px solid #22c55e}tr.zp td:first-child{border-left:5px solid #eab308}tr.zr td:first-child{border-left:5px solid #ef4444}
+.sq{display:inline-block;width:12px;height:12px;margin-right:6px;vertical-align:middle}.sq.z1{background:#3b82f6}.sq.z2{background:#f97316}.sq.z3{background:#14b8a6}.sq.za{background:#22c55e}.sq.zp{background:#eab308}.sq.zr{background:#ef4444}.leg{font-size:12px;margin-top:8px}
+.trg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}#season>.main{margin-top:auto}#create>#ct{order:-1}
+@keyframes sh{0%,100%{transform:none}20%{transform:translate(-6px,3px)}40%{transform:translate(6px,-3px)}60%{transform:translate(-4px,-2px)}80%{transform:translate(4px,2px)}}
+@keyframes fl{from{filter:brightness(1.8)}to{filter:none}}@keyframes flr{from{filter:brightness(.55)}to{filter:none}}
+.shake{animation:sh .4s}.fl{animation:fl .6s}.flr{animation:flr .6s}.shake.fl{animation:sh .4s,fl .6s}
+@media(prefers-reduced-motion:reduce){.shake,.shake.fl{animation:fl .6s}}
+</style></head><body><div id="app">
+<div class="row" style="margin-bottom:10px"><h1 style="margin:0;font-size:13px">⚽ PITCH RISE</h1><button id="lg" aria-label="Language" style="width:auto;min-width:64px;padding:0 8px;margin:0 6px 0 auto;font-size:10px">EN</button><button id="st" aria-label="Settings" style="width:48px;padding:0;margin:0 6px 0 0">⚙</button><button id="mu" aria-label="Mute or unmute" style="width:48px;padding:0;margin:0">🔊</button></div>
+<section id="slots" class="hidden"></section>
+<section id="create" class="hidden"><div class="card"><h2>NEW CAREER</h2>
+<label>Player name</label><input id="nm" maxlength="18" value="Alex Rookie">
+<label>Nationality (national team)</label><select id="nt"></select>
+<label>Starting country</label><select id="cc"></select>
+<label>Starting tier</label><select id="tt"><option value="4">Tier 4 · Zero to Hero (~55 OVR, recommended)</option><option value="3">Tier 3 · Faster start (~60 OVR)</option></select>
+<label>Starting position</label><div class="pos" id="ps"></div><p id="pd" style="margin:10px 0 0"></p></div>
+<button id="go" class="main">START CAREER · AGE 17</button><button class="s hidden" id="ct">CONTINUE SAVED CAREER</button><button class="s" onclick="slotsScr()">← BACK</button></section>
+<section id="hub" class="hidden"></section>
+<section id="train" class="hidden"></section>
+<section id="table" class="hidden"></section>
+<section id="season" class="hidden"></section>
+<section id="match" class="hidden">
+<div class="card"><div class="row"><div class="px" id="ml" style="font-size:9px;text-align:center;flex:1"></div><button id="pz" style="width:56px;margin:0;padding:6px" aria-label="Pause" onclick="togglePause()">⏸️</button></div><div class="score" id="sc"></div><div class="bar"><i id="mb" style="width:0"></i></div></div>
+<div class="card hidden" id="mom"><h2 id="mt"></h2><p id="md" style="margin:0 0 8px"></p><canvas id="cv" width="320" height="200"></canvas><div id="ctl" class="ctl"></div></div>
+<div class="card" id="tick"></div><div id="res"></div></section>
+<div id="tm" class="hidden"><div class="card"><h2 id="tmt"></h2><div id="tmb"></div><button onclick="$('#tm').classList.add('hidden')">CLOSE</button></div></div>
+<div id="lm" class="hidden"><div class="card"><h2>LANGUAGE</h2><div class="lgrid" id="lgrid"></div><button onclick="$('#lm').classList.add('hidden')">CLOSE</button></div></div>
+<div id="modal" class="hidden"><div class="card"><h2>SETTINGS</h2><button class="s" onclick="$('#modal').classList.add('hidden');save();slotsScr()">SWITCH CAREER</button><button class="s" onclick="$('#modal').classList.add('hidden');$('#lg').click()">LANGUAGE</button><button class="s" onclick="expSave()">EXPORT SAVE</button><button class="s" onclick="impSave()">IMPORT SAVE</button><button class="s" onclick="resetSave()">RESET CAREER</button><button onclick="$('#modal').classList.add('hidden')">CLOSE</button></div></div>
+</div>
+<script>
+const $=s=>document.querySelector(s),R=Math.random,ri=(a,b)=>a+Math.floor(R()*(b-a+1)),cl=(v,a,b)=>Math.max(a,Math.min(b,v)),pick=a=>a[ri(0,a.length-1)];
+const POS={GK:['Reflexes','Handling','Kicking'],DEF:['Tackling','Heading','Pace'],MID:['Passing','Vision','Shooting'],FWD:['Shooting','Dribbling','Heading']};
+const POSN={GK:['🧤 Goalkeeper','Dive to save shots and launch long passes.'],DEF:['🛡 Defender','Time tackles, block shots, win aerial duels.'],MID:['🎯 Midfielder','Find open runners, intercept, shoot from range.'],FWD:['🔥 Striker','Finish 1v1, dribble the last man, score headers.']};
+const NAT=['🇬🇧 England','🇧🇷 Brazil','🇪🇸 Spain','🇫🇷 France','🇩🇪 Germany','🇦🇷 Argentina','🇳🇬 Nigeria','🇨🇿 Czechia','🇮🇹 Italy','🇵🇹 Portugal','🇺🇸 USA','🇯🇵 Japan'];
+const TN=new Proxy([],{get:(a,k)=>(CT[P.club.c]||CT[0])[3][k-1]});
+const A=['Rovers','United','City','Athletic','Wanderers','Town','Sporting','Dynamo','Albion','Rangers','Olympic','Real'],B=['Northgate','Ashford','Kingsbridge','Millbrook','Oakley','Redhill','Stonehaven','Brightwater','Ironvale','Larkfield','Marlow','Hartley','Eastport','Westham','Cragmoor','Dunmere'];
+const NEU=['Midfield battle continues.','A strong challenge goes in.','The crowd sings loudly.','Corner cleared.','Shot flies wide!','Play stretched across the pitch.','Free kick, harmlessly delivered.'];
+const MOM={
+GK:[{t:'dive',ti:'Shot incoming!',s:'Reflexes',k:'d'},{t:'dive',ti:'Long-range thunderbolt!',s:'Handling',k:'d'},{t:'dive',ti:'Penalty!',s:'Reflexes',k:'d'},{t:'time',ti:'Long distribution',s:'Kicking',k:'a'}],
+DEF:[{t:'time',ti:'1v1 tackle',s:'Tackling',k:'d'},{t:'time',ti:'Defend the cross',s:'Heading',k:'d'},{t:'dive',ti:'Block the shot',s:'Pace',k:'d'},{t:'time',ti:'Corner: attack it!',s:'Heading',k:'a',g:1}],
+MID:[{t:'pick',ti:'Through ball',s:'Vision',k:'a',a:1},{t:'time',ti:'Intercept the pass',s:'Passing',k:'d'},{t:'time',ti:'Long-range shot',s:'Shooting',k:'a',g:1},{t:'pick',ti:'Killer pass',s:'Vision',k:'a',a:1}],
+FWD:[{t:'time',ti:'1v1 finish',s:'Shooting',k:'a',g:1},{t:'pick',ti:'Dribble past the last man',s:'Dribbling',k:'a',g:1},{t:'time',ti:'Header!',s:'Heading',k:'a',g:1},{t:'time',ti:'Edge-of-box strike',s:'Shooting',k:'a',g:1}]};
+const HINT={dive:'Tap LEFT, MIDDLE or RIGHT of the goal to dive. Watch the ball!',time:'Tap when the marker is in the green zone (gold = perfect).',pick:'Tap the OPEN lane (green ring). Defenders keep shifting!'};
+let P,L,G,M,tm,raf,OFFS=[];
+const cname=()=>pick(B)+' '+pick(A),team=c=>({n:c.n,str:c.str,P:0,W:0,D:0,L:0,GF:0,GA:0,Pts:0});
+const ovr=()=>Math.round(Object.values(P.st).reduce((a,b)=>a+b,0)/3);
+const wage=()=>Math.round((P.cw||100)*(P.cap?1.15:1)*(P.own&&P.own.ag?1.2:1));
+const show=id=>{document.querySelectorAll('section').forEach(s=>s.classList.add('hidden'));$('#'+id).classList.remove('hidden');scrollTo(0,0)};
+const save=()=>{if(AS<0||!P)return;try{const s=slots();s[AS]={P,L,ts:Date.now()};localStorage.setItem('pr_slots',JSON.stringify(s))}catch(e){}};
+function pois(l){l=Math.max(.3,l);const e=Math.exp(-l);let k=0,p=1;do{k++;p*=R()}while(p>e);return k-1}
+function sched(n=10){let a=[...Array(n).keys()],rs=[];for(let r=0;r<n-1;r++){const p=[];for(let i=0;i<n/2;i++)p.push([a[i],a[n-1-i]]);rs.push(p);a=[a[0],a[n-1],...a.slice(1,n-1)]}return rs.concat(rs.map(r=>r.map(([x,y])=>[y,x])))}
+function mkLeague(py){const T=P.club.tier,t=[team(P.club),...py[T-1].filter(c=>c.n!=P.club.n).map(c=>team(c))];return{t,py,sched:sched(t.length),round:0,cs:0,ca:[0,1,2,3,4,5,6,7],ip:[0,0],ws:0,mw:0,es:P.eu?0:10,eu:P.eu||0,sd:0,ep:0,v7:1,iv:P.nt?mkEv():[],lcs:LCN.includes(P.club.c)?0:3,lca:[0,2,3,5,7,8,9,11]}}
+const sorted=()=>[...L.t].sort((a,b)=>b.Pts-a.Pts||(b.GF-b.GA)-(a.GF-a.GA)||b.GF-a.GF);
+const opp=()=>{const p=L.sched[L.round].find(p=>p.includes(0));return L.t[p[0]==0?p[1]:p[0]]};
+function rec(i,gf,ga){const t=L.t[i];t.P++;t.GF+=gf;t.GA+=ga;if(gf>ga){t.W++;t.Pts+=3}else if(gf==ga){t.D++;t.Pts++}else t.L++}
+
+/* ---------- audio / fx / keys ---------- */
+let AC=null,mute=false;
+function ac(){try{if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)();if(AC.state=='suspended')AC.resume()}catch(e){}return AC}
+['pointerdown','keydown'].forEach(ev=>addEventListener(ev,ac,{passive:true}));
+function tone(f,d,ty,v,t0,f2){const c=AC,o=c.createOscillator(),g=c.createGain(),t=c.currentTime+(t0||0);o.type=ty;o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+d);g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g).connect(c.destination);o.start(t);o.stop(t+d)}
+function noise(d,v,fq){const c=AC,n=(c.sampleRate*d)|0,b=c.createBuffer(1,n,c.sampleRate),a=b.getChannelData(0);for(let i=0;i<n;i++)a[i]=Math.random()*2-1;const s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain(),t=c.currentTime;s.buffer=b;f.type='bandpass';f.frequency.value=fq;g.gain.setValueAtTime(.001,t);g.gain.linearRampToValueAtTime(v,t+d*.3);g.gain.linearRampToValueAtTime(.001,t+d);s.connect(f).connect(g).connect(c.destination);s.start()}
+const SFX={whistle(){tone(2300,.2,'sine',.12);tone(2300,.45,'sine',.12,.25)},kick(){tone(160,.12,'triangle',.3,0,45)},cheer(){noise(1.3,.2,1400)},swoosh(){noise(.3,.15,3500)},miss(){tone(220,.3,'sawtooth',.08,0,80)}};
+function sfx(n){if(!mute&&ac())try{SFX[n]()}catch(e){}}
+$('#mu').onclick=()=>{mute=!mute;$('#mu').textContent=mute?'🔇':'🔊'};
+function fx(k){const a=$('#app');if(!k)return;a.classList.remove('shake','fl','flr');void a.offsetWidth;if(k=='goal'||k=='save')a.classList.add('shake');a.classList.add(k=='bad'?'flr':'fl')}
+addEventListener('keydown',e=>{const k=e.key;if(!['ArrowLeft','ArrowUp','ArrowRight',' ','Enter'].includes(k)||!$('#modal').classList.contains('hidden')||!$('#lm').classList.contains('hidden')||!$('#tm').classList.contains('hidden')||/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;
+if(M&&!M.done){e.preventDefault();act(k=='ArrowLeft'?0:k=='ArrowRight'?2:1)}
+else if(k==' '||k=='Enter'){const b=document.querySelector('section:not(.hidden) .main:not(:disabled)');if(b){e.preventDefault();document.activeElement&&document.activeElement.blur();b.click()}}});
+/* ---------- career systems: cup, national team, trophies, saves ---------- */
+let HAS=0,NF=null;
+const CUPR=[3,8,13],EUR=[2,7,16],CN=['Cup Quarter-Final','Cup Semi-Final','Cup Final'],NATS=['Brazil','Spain','France','Germany','Argentina','Italy','Portugal','Japan','USA','Belgium','Netherlands','Croatia'];
+const NEWF=()=>({ap:0,cs:0,rs:0,rn:0,nt:0,mh:[],hist:[],ct:2,cw:0,role:'Key Starter',trust:60,yrs:0,cap:0,ncap:0,fame:0,sp:[],so:null,en:100,tw:0,mood:50,own:{},inj:0,injn:'',th:[],cc:{},up:{pt:0,ls:0},ev:[],tr:{lg:0,cup:0,wc:0,poty:0,bd:0,eu:0}});
+function mig(){const d=NEWF();for(const k in d)if(P[k]==null)P[k]=d[k];if(!P.cw)mig0();for(const k in d.tr)if(P.tr[k]==null)P.tr[k]=0;if(L.cs==null)Object.assign(L,{cs:0,ca:[0,1,2,3,4,5,6,7],ip:[0,0],ws:0});if(!L.py){P.club.c=CT.findIndex(c=>(P.nat||'').includes(c[1].slice(0,5)));if(P.club.c<0)P.club.c=0;L=mkLeague(mkPyr(P.club.c,P.club))}if(L.es==null)L.es=3;if(L.mw==null)L.mw=0;if(!L.iv)L.iv=P.nt?mkEv():[];if(!L.v7){L.v7=1;Object.assign(L,{es:10,ep:0,lcs:3,lca:[]})}}
+function news(t,b,f){NF=f||hub;show('season');$('#season').innerHTML=`<div class="card"><h2>${t}</h2><p>${b}</p></div><button class="main" onclick="NF()">CONTINUE</button>`}
+const wn=(a,b)=>R()<.5+(L.t[a].str-L.t[b].str)/120?a:b;
+function fix(){if(L.cf)return L.cf;if(L.intl)return L.intl;
+if(P.sup&&L.round==0&&!L.sd)return L.cf={ty:'sup',lb:'Super Cup',o:{n:rn(P.club.c,1),str:cl(P.club.str+ri(-2,6),50,95)}};
+while(L.cs<3&&L.round==rd([.15,.42,.7][L.cs])){const a=L.ca,s=L.cs;
+if(a.includes(0)){const q=a.filter(x=>x),o=pick(q),rest=q.filter(x=>x!=o);L.cw=[];for(let i=0;i<rest.length;i+=2)L.cw.push(wn(rest[i],rest[i+1]));return L.cf={ty:'cup',o:L.t[o],oi:o,lb:CN[s]}}
+L.ca=[];for(let i=0;i<a.length;i+=2)L.ca.push(wn(a[i],a[i+1]));L.cs++}
+while(L.lcs<3&&L.round==rd([.08,.3,.55][L.lcs])){const a=L.lca,s=L.lcs;if(a.includes(0)){const q=a.filter(x=>x),o=pick(q),rest=q.filter(x=>x!=o);L.lcw=[];for(let i=0;i<rest.length;i+=2)L.lcw.push(wn(rest[i],rest[i+1]));return L.cf={ty:'lcup',o:L.t[o],oi:o,lb:'League Cup '+['Quarter-Final','Semi-Final','Final'][s]}}L.lca=[];for(let i=0;i<a.length;i+=2)L.lca.push(wn(a[i],a[i+1]));L.lcs++}
+if(L.es<10&&L.round==rd([.05,.12,.2,.3,.38,.46,.58,.7,.82,.94][L.es])){const c=ri(0,(L.eu||1)==1?4:14),k=L.es<6;return L.cf={ty:'eur',lb:EUN[L.eu||1]+' '+(k?'League Phase '+(L.es+1)+'/6':['Round of 16','Quarter-Final','Semi-Final','Final'][L.es-6]),o:{n:rn(c,1),str:cl([0,74,68,62][L.eu||1]+(k?0:(L.es-6)*3)+ri(-2,8),55,92)}}}
+if(P.nt&&L.iv){const e=L.iv.find(x=>!x.done&&L.round==rd(x.at));if(e)return L.intl={ty:'int',ei:L.iv.indexOf(e),lb:e.nm+' '+e.st[e.i],t:{n:P.nat,str:72},o:{n:oppN(e),str:cl(e.s+e.i*2+ri(-4,6),50,95)}}}
+if(0){const w=0;let k=-1,lb='';
+if(w&&L.round==rd(.8)&&L.ws<3){k=1;lb=['World Cup Quarter-Final','World Cup Semi-Final','World Cup Final'][L.ws]}
+else if(!w&&(L.round==rd(.25)||L.round==rd(.6))&&!L.ip[L.round==rd(.25)?0:1]){k=0;lb='International Qualifier'}
+if(lb)return L.intl={ty:'int',k,lb,t:{n:P.nat,str:72},o:{n:pick(NATS),str:ri(64,80)+(k?L.ws*3:0)}}}
+const o=opp();return{ty:'lg',o,lb:'League · Round '+(L.round+1)+'/'+L.sched.length}}
+function post(){const F=G.F,tie=G.me==G.op;if(!G.inj){P.ap++;P.rs+=G.rt;P.rn++;if(!G.op&&(P.pos=='GK'||P.pos=='DEF'))P.cs++}
+if(!G.inj){const c=cc(F.ty=='int'&&F.ei!=null?'i'+L.iv[F.ei].id:F.ty);c.g+=G.pg;c.a+=G.pa;c.rs+=G.rt;c.n++;if(!G.op&&(P.pos=='GK'||P.pos=='DEF'))c.cs++}
+if(!G.inj)P.mh.unshift(F.lb.split(' · ')[0]+': '+G.me+'-'+G.op+' v '+G.o.n+' ('+G.rt.toFixed(1)+')');P.mh.length=Math.min(P.mh.length,8);
+if(F.ty=='lg')return 0;
+const win=G.res?R()<.5+(G.T.str-G.o.str)/120:G.me>G.op||(tie&&R()<.5+(G.T.str-G.o.str)/200),sc=G.me+'-'+G.op+(tie?' (penalties)':'')+' v '+G.o.n+'.';
+if(F.ty=='sup'){L.cf=null;L.sd=1;if(win){P.tr.sc=(P.tr.sc||0)+1;addT('sc',fd(),'sup')}news(win?'SUPER CUP WINNERS!':'Super Cup lost',sc);return 1}
+if(F.ty=='eur'&&L.es<6){L.cf=null;const pw=G.res?(win?3:0):G.me>G.op?3:G.me==G.op?1:0;L.ep=(L.ep||0)+pw;L.es++;if(L.es==6){if(L.ep>=[0,7,6,5][L.eu||1])news(EUN[L.eu||1]+': through!','League phase: '+L.ep+' pts. Round of 16 next. '+sc);else{L.es=10;news('Out of the '+EUN[L.eu||1],'League phase: '+L.ep+' pts, not enough. '+sc)}}else news('League Phase '+L.es+'/6',sc+' ('+L.ep+' pts)');return 1}
+if(F.ty=='eur'){L.cf=null;const f=L.es==9;if(win)L.es++;else L.es=10;if(win&&f){P.tr.eu++;addT(['','cl','el','ecl'][L.eu||1],fd(),'eur');news('🌟 '+EUN[L.eu||1].toUpperCase()+' WINNERS!','Champions of Europe! '+sc)}else news(win?EUN[L.eu||1]+': through!':'Out of the '+EUN[L.eu||1],sc);return 1}
+if(F.ty=='lcup'){const f=F.lb.endsWith('Final');L.lca=[...L.lcw,win?0:F.oi];L.lcs++;L.cf=null;if(win&&f){P.tr.lc=(P.tr.lc||0)+1;P.cupw=1;addT('lc',fd(),'lcup');news('LEAGUE CUP WINNERS!','You won the League Cup final! '+sc)}else news(win?'League Cup: through!':'Knocked out of the League Cup',sc);return 1}
+if(F.ty=='int'&&F.ei!=null){intlPost(F,win,sc);return 1}
+if(F.ty=='eur'){L.cf=null;const f=L.es==2;if(win)L.es++;else L.es=3;if(win&&f){P.tr.eu++;news('🌟 '+EUN[L.eu||1].toUpperCase()+' WINNERS!','Champions of Europe! '+sc)}else news(win?EUN[L.eu||1]+': through!':'Out of the '+EUN[L.eu||1],sc);return 1}
+if(F.ty=='cup'){const f=F.lb.endsWith('Final');L.ca=[...L.cw,win?0:F.oi];L.cs++;L.cf=null;
+if(win&&f){P.tr.cup++;P.cupw=1;addT('cup',fd(),'cup');news('🥇 CUP WINNERS!','You won the Cup Final! '+sc)}else news(win?'Cup: through!':'Knocked out of the Cup',sc+(win?' On to the next round.':''))}
+else{L.intl=null;
+if(F.k==0){L.ip[L.round==rd(.25)?0:1]=1;news('International Qualifier',sc+' Rating '+G.rt.toFixed(1))}
+else if(!win){L.ws=3;news('World Cup: eliminated',sc)}
+else if(++L.ws==3){P.tr.wc++;news('🌍 WORLD CUP WINNERS!','Champions of the world! '+sc)}else news('World Cup: through!',sc)}
+return 1}
+function careerScr(){show('table');const T=P.tr,av=P.rn?(P.rs/P.rn).toFixed(2):'-',
+ic=(e,n,l)=>`<div style="text-align:center;opacity:${n?1:.3}"><div style="font-size:30px">${e}</div><b>${n}</b><br><small>${l}</small></div>`,rw=(a,b)=>`<div class="row"><span>${a}</span><b>${b}</b></div>`;
+$('#table').innerHTML=`<div class="card"><h2>CAREER STATS</h2>${rw('Appearances',P.ap)}${rw('Goals',P.g)}${rw('Assists',P.a)}${P.pos=='GK'||P.pos=='DEF'?rw('Clean sheets',P.cs):''}${rw('Average rating',av)}${rw('Fame',P.fame)}</div>
+<div class="card"><h2>TROPHY CABINET</h2><div class="trg">${ic('🏆',T.lg,'League titles')}${ic('🥇',T.cup,'Domestic Cup')}${ic('🌍',T.wc,'World Cup')}${ic('⭐',T.poty,'Player of Year')}${ic('🌟',T.eu||0,'Champions Cup')}${ic('🏆',T.lc||0,'League Cup')}${ic('🏅',T.bd,'Ballon d’Or')}</div></div>
+<div class="card"><h2>TIMELINE</h2>${P.hist.map(h=>`<div>S${h.s}: ${h.c} (${TN[h.t]}) · #${h.p}</div>`).join('')}<div>S${P.season}: ${P.club.n} (${TN[P.club.tier]}) · current</div></div>
+<div class="card"><h2>RECENT MATCHES</h2>${P.mh.length?P.mh.map(m=>`<div>${m}</div>`).join(''):'No matches yet.'}</div><button class="s" onclick="hub()">← BACK</button>`}
+$('#st').onclick=()=>$('#modal').classList.remove('hidden');
+function expSave(){if(!P)return alert('No career to export yet.');const s=JSON.stringify({P,L});try{navigator.clipboard.writeText(s).then(()=>alert('Save copied to clipboard.'),()=>prompt('Copy your save:',s))}catch(e){prompt('Copy your save:',s)}}
+function impSave(){const s=prompt('Paste save data:');if(!s)return;try{const o=JSON.parse(s);if(!o.P||!o.L)throw 0;({P,L}=o);mig();save();$('#modal').classList.add('hidden');hub()}catch(e){alert('Invalid save data.')}}
+function resetSave(){if(confirm('Delete your saved career? This cannot be undone.')){try{localStorage.removeItem('pr1')}catch(e){}location.reload()}}
+/* ---------- Europe: 15 nations x 4 tiers (compact generator) ---------- */
+/* [flag,name,power,tier names,city start,city end,club prefixes,club suffixes] */
+const CT=[
+['🇬🇧','England',10,['Premier Tier','Championship Tier','League One','Regional Division 4'],'Ash,Brook,Mill,Stone,Red,King,Oak,North','ford,ham,ton,bridge,field,wick','','City,United,Town,Rovers,Athletic'],
+['🇪🇸','Spain',9,['Primera','Segunda','Primera Fed','Tercera Div'],'Alba,Monte,Costa,Sierra,Valle,Puerto,Santa','verde,nueva,mar,real,luna,alta','CD,Real,Racing,Atlético',''],
+['🇮🇹','Italy',8.6,['Serie A','Serie B','Serie C','Serie D'],'Monte,Val,Porto,Villa,Castel,San,Borgo','rosso,bianca,nova,linda,forte,mare','AC,US,Virtus',''],
+['🇩🇪','Germany',9,['1. Liga','2. Liga','3. Liga','Regionalliga'],'Nord,Rhein,Berg,Wald,Hafen,Ober,Neu','stadt,burg,dorf,heim,feld,au','SV,FC,TSV,Eintracht',''],
+['🇫🇷','France',8,['Ligue 1','Ligue 2','National','National 2'],'Val,Mont,Saint,Belle,Port,Roche,Fleur','mont,ville,sur-Mer,court,vert,bourg','AS,FC,Olympique,Stade',''],
+['🇳🇱','Netherlands',7,['Eredivisie','Eerste Div','Tweede Div','Derde Div'],'Water,Zuid,Noord,Oost,Haven,Dijk,Berg','dam,wijk,veld,stad,haven,kerk','FC,SC,VV',''],
+['🇵🇹','Portugal',7,['Primeira','Segunda','Liga 3','Campeonato'],'Vila,Santa,Monte,Praia,Sol,Serra,Porto','nova,verde,mar,alta,branca,real','SC,GD,CD',''],
+['🇧🇪','Belgium',6.5,['Pro League','Challenger','National 1','Division 2'],'Brug,Wal,Gen,Leu,Her,Dil,Ton','ge,en,beek,hout,ter,sel','KV,RSC,Royal',''],
+['🇹🇷','Turkey',6.2,['Süper Lig','1. Lig','2. Lig','3. Lig'],'Kara,Yeni,Altın,Deniz,Mavi,Yıldız,Boz','dağ,şehir,pınar,köy,tepe,ova','','Spor,Gençlik,SK'],
+['🇨🇿','Czech Republic',5.5,['1. Liga','FNL / 2. Liga','ČFL/MSFL 3. Liga','Divize 4. Liga'],'Slav,Hrad,Dub,Lip,Svit,Bělo,Zelen','nice,ov,any,ec,ice,ná','FK,SK,TJ,FC',''],
+['🏴󠁧󠁢󠁳󠁣󠁴󠁿','Scotland',5.2,['Premiership','Championship','League One','Highland/Lowland Div'],'Glen,Loch,Aber,Inver,Strath,Dun,Kil','more,bridge,ross,ness,ton,burgh','','Thistle,Rovers,Athletic,United'],
+['🇦🇹','Austria',5.5,['Bundesliga','2. Liga','Regionalliga','Landesliga'],'Alp,Donau,Steir,Tirol,Salz,Wein,Kärn','hof,stadt,berg,au,tal,dorf','SK,FC,SV,ASK',''],
+['🇨🇭','Switzerland',5.3,['Super League','Challenge League','Promotion League','1. Liga Classic'],'Lem,Zür,Aar,Luz,Thun,Bern,Sion','ach,au,wil,ern,ingen,bach','FC,BSC',''],
+['🇬🇷','Greece',5,['Super League','Super League 2','Gamma Ethniki','Regional Div'],'Kalo,Pela,Thess,Aeg,Olym,Mela,Pyr','poli,nikos,ina,kos,tos,ia','AO,PAE,AE',''],
+['🇩🇰','Denmark',5.2,['Superliga','1st Division','2nd Division','3rd Division'],'Nord,Ros,Vest,Ska,Hel,Aal,Her','kilde,by,borg,havn,lev,ning','','BK,IF,FC']];
+const base=(T,c)=>[0,74,66,58,50][T]+(CT[c][2]-5)*1.6*(4-T)/3;
+function cn(c){const[,,,,A,B,pre,suf]=CT[c],p=s=>pick(s.split(','));return(pre?p(pre)+' ':'')+p(A)+p(B)+(suf?' '+p(suf):'')}
+const mkClub=(c,T,x)=>({n:rn(c,T),c,tier:T,str:Math.round(base(T,c)+ri(-5,5)+(x||0))});
+function mkPyr(c,me){const u=new Set([me.n]);return[1,2,3,4].map(T=>{const a=T==me.tier?[me]:[];while(a.length<10){const k=mkClub(c,T);if(u.has(k.n))continue;u.add(k.n);a.push(k)}return a})}
+function nextPyr(){const T=P.club.tier-1,py=L.py.map(a=>a.map(c=>({...c}))),
+rk=py.map((a,i)=>i==T?sorted().map(t=>a.find(c=>c.n==t.n)):a.map(c=>[c,c.str+ri(-9,9)]).sort((x,y)=>y[1]-x[1]).map(x=>x[0])),
+keep=rk.map((a,i)=>a.slice(i?2:0,i<3?8:10)),up=rk.map((a,i)=>i?a.slice(0,2):[]),dn=rk.map((a,i)=>i<3?a.slice(8):[]);
+return keep.map((k,i)=>[...k,...(i?dn[i-1]:[]),...(i<3?up[i+1]:[])].map(c=>({...c,tier:i+1,str:cl(Math.round((c.str+base(i+1,c.c))/2+ri(-2,2)),35,92)})))}
+const stars=s=>{const n=cl(Math.round((s-45)/9),1,5);return '★'.repeat(n)+'☆'.repeat(5-n)},std=s=>Math.round((s-40)**2/10)*100;
+const oinfo=c=>`${CT[c.c][1]} - ${CT[c.c][3][c.tier-1]} (Tier ${c.tier})<br>${stars(c.str)} · ${c.role} · £${c.w.toLocaleString()}/wk · ${c.y||1} season${(c.y||1)>1?'s':''}${c.pre?' · agreed':''}`;
+function genOffers(avg){const o=ovr(),n=(avg>=6?ri(3,5):ri(1,2))+(P.own&&P.own.ag?1:0),a=[];
+for(let i=0;i<n;i++){let T,c;
+if(o>=77){c=ri(0,4);T=1}else if(o>=68){if(R()<.5){c=ri(5,14);T=1}else{c=ri(0,4);T=2}}
+else if(o>=60){T=pick([2,3,3]);c=R()<.5?P.club.c:ri(0,14)}else{T=R()<.7?4:3;c=R()<.5?P.club.c:ri(0,14)}
+const k=mkClub(c,T,T==3&&o<60?-4:o>=77?ri(0,5):0);
+k.role=roleOf(k.str);k.y=ri(1,4);
+k.w=Math.round([0,6000,2500,900,300][T]*o/60*(1+(CT[c][2]-5)/20)*(k.role=='Key Starter'?1.3:k.role=='Impact Sub'?1:.6));a.push(k)}return a}
+function winScreen(){const a=genOffers(P.rts.length?P.rts.reduce((x,y)=>x+y,0)/P.rts.length:6);OFFS=a;show('season');
+$('#season').innerHTML=`<div class="card"><h2>MID-SEASON WINDOW</h2><p>Clubs are scouting you. Agree a move now and it happens in the summer.</p></div>`+a.map((c,i)=>`<button onclick="pre(${i})">${CT[c.c][0]} ${c.n}<br><small>${oinfo(c)}</small></button>`).join('')+`<button class="main s" onclick="pre(-1)">NO THANKS</button>`}
+function pre(i){if(i>=0)P.pre=OFFS[i];hub()}
+/* ---------- contracts, squad role, captaincy, sponsors ---------- */
+const ev=(t,b)=>P.ev.push([t,b]),roleOf=s=>{const g=ovr()-s;return g>=3?'Key Starter':g>=-6?'Impact Sub':'Reserve Squad'};
+function mig0(){P.cw=Math.round([0,6000,2500,900,300][P.club.tier]*ovr()/60*(1+(CT[P.club.c||0][2]-5)/20));P.role=roleOf(P.club.str);P.trust=P.role=='Key Starter'?60:P.role=='Impact Sub'?45:30;P.ct=ri(1,3)}
+function trustUpd(d){P.trust=cl(P.trust+(d==null?(G.rt-6.2)*4*(G.res?.5:1):d),0,100);roleChk()}
+function roleChk(){const L2=['Reserve Squad','Impact Sub','Key Starter'],i=L2.indexOf(P.role),g=ovr()-P.club.str;let n=i;
+if(i<2&&P.trust>=(i?80:60)&&g>=(i?-8:-12))n=i+1;else if(i>0&&P.trust<25)n=i-1;
+if(n!=i){P.role=L2[n];P.trust=n>i?55:45;ev(n>i?'PROMOTED IN THE SQUAD!':'DROPPED DOWN THE PECKING ORDER','You are now: '+P.role+'.'+(n>i?' Expect more game time.':' Train hard to win back your manager.'));if(n<2&&P.cap){P.cap=0;ev('Armband lost','You are no longer a first-team starter, so the captaincy is gone.')}}}
+function capChk(avg){if(!P.cap&&P.role=='Key Starter'&&P.yrs>=2&&P.trust>=85&&avg>=7){P.cap=1;ev('© NAMED CLUB CAPTAIN!','You take the armband at '+P.club.n+'. +15% wage and Captain Team Talks before cup, European and international nights.')}
+if(P.cap&&!P.ncap&&P.nt&&ovr()>=78){P.ncap=1;ev('© NATIONAL TEAM CAPTAIN!','You now lead '+P.nat+' as captain.')}}
+function talk(){show('season');$('#season').innerHTML=`<div class="card"><h2>© CAPTAIN TEAM TALK</h2><p>Big match ahead. How do you address the squad?</p></div><button onclick="ttk(0)">FIRE THEM UP<br><small>risky, big boost</small></button><button onclick="ttk(1)">STAY CALM<br><small>safe, small boost</small></button><button onclick="ttk(2)">STICK TO THE PLAN<br><small>reliable boost</small></button>`}
+function ttk(k){window._mor=k==0?(R()<.65?4:-2):k==1?2:(R()<.8?3:0);window._tt=1;playMatch()}
+function reqT(){trustUpd(-10);winScreen()}
+const SP=[['Local Pizzeria',4,0,40,15],['Auto Repair Shop',4,8,60,20],['Regional Bank',3,30,150,50],['Sports Shop Chain',3,50,220,70],['Energy Drink Co.',2,110,500,150],['National Sportswear',2,170,900,250],['Global Sportswear Giant',1,260,2500,600],['Global Energy Giant',1,360,4000,900]],BT={GK:'clean sheet',DEF:'clean sheet',MID:'assist',FWD:'goal'},UP={pt:[3000,12000,40000],ls:[2000,10000,35000]};
+function sponsorPay(){const cnt=P.pos=='GK'||P.pos=='DEF'?+(G.op==0):P.pos=='MID'?G.pa:G.pg;let s=0;P.sp.forEach(d=>{s+=d.w+d.b*(cnt+(G.rt>=8.5?1:0))});P.money+=s}
+function mkSp(){return SP.filter(s=>P.club.tier<=s[1]&&P.fame>=s[2]&&!P.sp.some(d=>d.n==s[0])).map(s=>({n:s[0],y:ri(1,2),w:Math.round(s[3]*(1+P.fame/500)),b:Math.round(s[4]*(1+P.fame/500))}))}
+function sponScr(){show('table');if(!P.so)P.so=mkSp();const nx=SP.find(s=>!(P.club.tier<=s[1]&&P.fame>=s[2]&&!P.sp.some(d=>d.n==s[0]))&&!P.sp.some(d=>d.n==s[0]));
+$('#table').innerHTML=`<div class="card"><h2>SPONSORS</h2><p>Fame ${P.fame} · Tier ${P.club.tier} · £${P.money.toLocaleString()}</p>${P.sp.length?P.sp.map(d=>`<div>${d.n}: £${d.w}/wk + £${d.b} per ${BT[P.pos]} or Man of the Match · ${d.y} season(s) left</div>`).join(''):'<p>No active deals.</p>'}</div><div class="card"><h2>OFFERS (max 3 deals)</h2>${P.so.length?'':'<p>No offers right now.</p>'}${nx?'<small>Next brand: '+nx[0]+' (Fame '+nx[2]+', Tier '+nx[1]+' or better)</small>':''}</div>`+P.so.map((d,i)=>`<button ${P.sp.length>=3?'disabled':''} onclick="sign(${i})">${d.n}<br><small>${d.y} season(s) · £${d.w}/wk · +£${d.b} per ${BT[P.pos]} or MotM</small></button>`).join('')+`<div class="card" style="margin-top:12px"><h2>SHOP</h2>`+[['pt','Personal Trainer + Recovery Gear','+15% XP per level'],['ls','Lifestyle upgrade','+25% Fame per level']].map(u=>{const l=P.up[u[0]],c=UP[u[0]][l];return `<button class="s" ${c==null||P.money<c?'disabled':''} onclick="buy('${u[0]}')">${u[1]} · Lv ${l}/3<br><small>${u[2]} · ${c==null?'MAX':'£'+c.toLocaleString()}</small></button>`}).join('')+`</div><button class="s" onclick="hub()">← BACK</button>`}
+function sign(i){P.sp.push(P.so.splice(i,1)[0]);save();sponScr()}
+function buy(k){const c=UP[k][P.up[k]];if(c==null||P.money<c)return;P.money-=c;P.up[k]++;save();sponScr()}
+/* ---------- i18n: 10 languages (en base, de fr es pt cs uk pl sk bg) ---------- */
+let LANG='en',RX=null;
+const LG=[['en','🇬🇧','English'],['de','🇩🇪','Deutsch'],['fr','🇫🇷','Français'],['es','🇪🇸','Español'],['pt','🇵🇹','Português'],['cs','🇨🇿','Čeština'],['uk','🇺🇦','Українська'],['pl','🇵🇱','Polski'],['sk','🇸🇰','Slovenčina'],['bg','🇧🇬','Български']],LI={de:0,fr:1,es:2,pt:3,cs:4,uk:5,pl:6,sk:7,bg:8},D={},REC=new WeakMap();
+/* English key|de|fr|es|pt|cs|uk|pl|sk|bg  (fragments are matched longest-first inside any UI text) */
+`NEW CAREER|NEUE KARRIERE|NOUVELLE CARRIÈRE|NUEVA CARRERA|NOVA CARREIRA|NOVÁ KARIÉRA|НОВА КАР'ЄРА|NOWA KARIERA|NOVÁ KARIÉRA|НОВА КАРИЕРА
+Player name|Spielername|Nom du joueur|Nombre del jugador|Nome do jogador|Jméno hráče|Ім'я гравця|Nazwa gracza|Meno hráča|Име на играча
+Nationality (national team)|Nationalität (Nationalteam)|Nationalité (équipe nationale)|Nacionalidad (selección)|Nacionalidade (seleção)|Národnost (reprezentace)|Національність (збірна)|Narodowość (reprezentacja)|Národnosť (reprezentácia)|Националност (национален отбор)
+Starting country|Startland|Pays de départ|País inicial|País inicial|Startovní země|Країна старту|Kraj startu|Štartovacia krajina|Начална държава
+Starting tier|Startliga|Division de départ|Categoría inicial|Escalão inicial|Startovní liga|Стартова ліга|Liga startowa|Štartovacia liga|Начална лига
+Starting position|Startposition|Poste de départ|Posición inicial|Posição inicial|Výchozí post|Стартова позиція|Pozycja startowa|Štartová pozícia|Начална позиция
+Zero to Hero|Vom Niemand zum Star|De zéro à héros|De cero a héroe|De zero a herói|Od nuly k hrdinovi|З нуля до героя|Od zera do bohatera|Od nuly k hrdinovi|От нула до герой
+recommended|empfohlen|recommandé|recomendado|recomendado|doporučeno|рекомендовано|zalecane|odporúčané|препоръчително
+Faster start|Schnellerer Start|Départ plus rapide|Inicio más rápido|Início mais rápido|Rychlejší start|Швидший старт|Szybszy start|Rýchlejší štart|По-бърз старт
+Tier|Stufe|Division|Nivel|Escalão|Úoveň|Рівень|Poziom|Úoveň|Ниво
+Premier Tier
+Championship Tier
+START CAREER|KARRIERE STARTEN|DÉBUTER LA CARRIÈRE|EMPEZAR CARRERA|INICIAR CARREIRA|ZAČÍT KARIÉRU|ПОЧАТИ КАР'ЄРУ|ROZPOCZNIJ KARIERĘ|ZAČAŤ KARIÉRU|ЗАПОЧНИ КАРИЕРА
+AGE|ALTER|ÂGE|EDAD|IDADE|VĚK|ВІК|WIEK|VEK|ВЪЗРАСТ
+Age|Alter|Âge|Edad|Idade|Věk|Вік|Wiek|Vek|Възраст
+CONTINUE|WEITER|CONTINUER|CONTINUAR|CONTINUAR|POKRAČOVAT|ПРОДОВЖИТИ|DALEJ|POKRAČOVAŤ|ПРОДЪЛЖИ
+Goalkeeper|Torwart|Gardien|Portero|Guarda-redes|Brankář|Воротар|Bramkarz|Brankár|Вратар
+Defender|Verteidiger|Défenseur|Defensa|Defesa|Obránce|Захисник|Obrońca|Obranca|Защитник
+Midfielder|Mittelfeldspieler|Milieu|Centrocampista|Médio|Záložník|Півзахисник|Pomocnik|Záložník|Полузащитник
+Striker|Stürmer|Attaquant|Delantero|Avançado|Útokář|Нападник|Napastnik|Útocík|Нападател
+Dive to save shots and launch long passes.|Halte Schüsse mit Paraden und spiele lange Pässe.|Plonge pour arrêter les tirs et lance de longues passes.|Lánzate a parar tiros y saca con pases largos.|Mergulha para defender remates e lança passes longos.|Chytej střely skoky a rozehrávej dlouhé přihrávky.|Стрибай за м'ячами та розпочинай довгі передачі.|Broń strzały w wyskokach i wznawiaj długimi podaniami.|Chytaj strely skokmi a rozohrávaj dlhé prihrávky.|Спасявай удари с хвърляне и подавай дълго.
+Time tackles, block shots, win aerial duels.|Timing für Tackles, Schüsse blocken, Kopfballduelle gewinnen.|Tacles bien timés, tirs bloqués, duels aériens gagnés.|Entradas a tiempo, bloquea tiros y gana duelos aéreos.|Faz desarmes certeiros, bloqueia remates e vence duelos aéreos.|Načasuj skluzy, blokuj střely a vyhrávej vzdušné souboje.|Вчасно відбирай м'яч, блокуй удари, вигравай верхові єдиноборства.|Wyczuj moment odbioru, blokuj strzały i wygrywaj pojedynki powietrzne.|Načasuj skluzy, blokuj strely a vyhrávaj vzdušné súčboje.|Спирай навреме, блокирай удари и печели въздушни дуели.
+Find open runners, intercept, shoot from range.|Finde freie Mitspieler, fange Pässe ab, schieße aus der Distanz.|Trouve les coéquipiers démarqués, intercepte, tire de loin.|Encuentra al compañero libre, intercepta y chuta de lejos.|Encontra colegas livres, intercepta e remata de longe.|Najdi volného spoluhráče, zachytávej přihrávky a střílej z dálky.|Знаходь вільних партнерів, перехоплюй та бий здалеку.|Znajdź wolnego partnera, przechwytuj piłki i strzelaj z dystansu.|Nájdi voľného spoluhráča, zachytávaj prihrávky a strieľaj z diaľky.|Намирай свободни съотборници, прехващай и стреляй от разстояние.
+Finish 1v1, dribble the last man, score headers.|Schließe 1-gegen-1 ab, tunnle den letzten Mann, köpfe Tore.|Finis en 1 contre 1, dribble le dernier défenseur, marque de la tête.|Define mano a mano, regatea al último y marca de cabeza.|Finaliza a 1 para 1, dribla o último e marca de cabeça.|Zakončuj sám na sám, obejdi posledního obránce a dávej góly hlavou.|Завершуй 1 на 1, обіграй останнього та забивай головою.|Wykańczaj sam na sam, miń ostatniego obrońcę i strzelaj głową.|Zakončuj sám na sám, obíď posledného obrancu a dávaj góly hlavou.|Завършвай 1 на 1, подминавай последния и вкарвай с глава.
+Key stats:|Wichtige Werte:|Stats clés :|Atributos clave:|Atributos-chave:|Klíčové dovednosti:|Ключові навички:|Kluczowe umiejętności:|Kľúčové zručnosti:|Ключови умения:
+Reflexes|Reflexe|Réflexes|Reflejos|Reflexos|Reflexy|Реакція|Refleks|Reflexy|Рефлекси
+Handling|Fangsicherheit|Prise de balle|Atrapada|Segurança|Chytání|Робота руками|Chwyt|Chytanie|Хващане
+Kicking|Abschlag|Dégagement|Saque|Pontapé|Rozehra|Вибиття|Wybicie|Rozohra|Ритане
+Tackling|Zweikampf|Tacle|Entradas|Desarme|Skluzy|Відбір|Odbiór|Skluzy|Отнемане
+Heading|Kopfball|Jeu de tête|Juego aéreo|Jogo aéreo|Hlavičky|Гра головою|Gra głową|Hlavičky|Игра с глава
+Pace|Tempo|Vitesse|Velocidad|Velocidade|Rychlost|Швидкість|Szybkość|Rýchlosť|Скорост
+Passing|Passspiel|Passes|Pases|Passe|Přihrávky|Передачі|Podania|Prihrávky|Подавания
+Vision|Übersicht|Vision|Visión|Visão|Přehled|Бачення поля|Wizja|Prehľad|Визия
+Shooting|Schuss|Tir|Disparo|Remate|Střelba|Удар|Strzał|Strieľba|Стрелба
+Dribbling|Dribbling|Dribble|Regate|Drible|Kličky|Дриблінг|Drybling|Kľučky|Дрибъл
+Key Starter|Stammspieler|Titulaire|Titular|Titular|Opora sestavy|Основний склад|Podstawowy skład|Opora zostavy|Титуляр
+Impact Sub|Joker (Einwechsler)|Remplaçant décisif|Revulsivo|Suplente de impacto|Střídající hráč|Гравець із лави|Rezerwowy z ławki|Striedaújci hráč|Резерва
+Reserve Squad|Reserve (B-Team)|Équipe réserve|Filial (B)|Equipa B|Rezerva (B-tým)|Резерв (Б-команда)|Rezerwy (zespół B)|Rezerva (B-tím)|Резерви (Б-отбор)
+Season|Saison|Saison|Temporada|Época|Sezóna|Сезон|Sezon|Sezóna|Сезон
+Career:|Karriere:|Carrière :|Carrera:|Carreira:|Kariéra:|Кар'єра:|Kariera:|Kariéra:|Кариера:
+goals|Tore|buts|goles|golos|gólů|голів|goli|gólov|гола
+assists|Vorlagen|passes décisives|asistencias|assistências|asistencí|асистів|asyst|asistencií|асистенции
+Stadium|Stadion|Stade|Estadio|Estádio|Stadion|Стадіон|Stadion|Štadión|Стадион
+Table|Tabelle|Classement|Tabla|Tabela|Tabulka|Таблиця|Tabela|Tabuľka|Класиране
+Wage|Gehalt|Salaire|Salario|Salário|Plat|Зарплата|Pensja|Plat|Заплата
+/wk|/Woche|/sem.|/sem.|/sem.|/týd.|/тиж.|/tydz.|/týž.|/седм.
+Contract|Vertrag|Contrat|Contrato|Contrato|Smlouva|Контракт|Kontrakt|Zmluva|Договор
+yr left|J. übrig|an(s) restant(s)|año(s) restante(s)|ano(s) restante(s)|rok(y) zbývá|р. залишилось|r. pozostało|r. zostáva|г. остават
+Squad role|Kaderrolle|Rôle dans l'effectif|Rol en la plantilla|Papel no plantel|Role v týmu|Роль у складі|Rola w kadrze|Rola v tíme|Роля в отбора
+Manager trust|Vertrauen des Trainers|Confiance du coach|Confianza del entrenador|Confiança do treinador|Důvěra trenéra|Довіра тренера|Zaufanie trenera|Dôvera trénera|Доверие на треньора
+Fame|Ruhm|Célébrité|Fama|Fama|Sláva|Слава|Sława|Sláva|Слава
+SPONSORS & SHOP|SPONSOREN & SHOP|SPONSORS & BOUTIQUE|PATROCINADORES Y TIENDA|PATROCINADORES E LOJA|SPONZOŘI A OBCHOD|СПОНСОРИ І МАГАЗИН|SPONSORZY I SKLEP|SPONZORI A OBCHOD|СПОНСОРИ И МАГАЗИН
+REQUEST TRANSFER|WECHSEL ANFRAGEN|DEMANDER UN TRANSFERT|PEDIR TRASPASO|PEDIR TRANSFERÊNCIA|ŽÁDAT O PŘESTUP|ПРОСИТИ ТРАНСФЕР|PROŚ O TRANSFER|ŽIADAŤ O PRESTUP|ИСКАЙ ТРАНСФЕР
+PLAY MATCH|SPIEL STARTEN|JOUER LE MATCH|JUGAR PARTIDO|JOGAR PARTIDA|ODEHRÁT ZÁPAS|ГРАТИ МАТЧ|ZAGRAJ MECZ|ODOHRAŤ ZÁPAS|ИГРАЙ МАЧ
+TRAINING|TRAINING|ENTRAÎNEMENT|ENTRENAMIENTO|TREINO|TRÉNINK|ТРЕНУВАННЯ|TRENING|TRÉNING|ТРЕНИРОВКА
+LEAGUE TABLE|TABELLE|CLASSEMENT|CLASIFICACIÓN|CLASSIFICAÇÃO|TABULKA LIGY|ТУРНІРНА ТАБЛИЦЯ|TABELA LIGI|TABUĽKA LIGY|КЛАСИРАНЕ
+CAREER STATS|KARRIERESTATISTIK|STATISTIQUES DE CARRIÈRE|ESTADÍSTICAS DE CARRERA|ESTATÍSTICAS DA CARREIRA|STATISTIKY KARIÉRY|СТАТИСТИКА КАР'ЄРИ|STATYSTYKI KARIERY|ŠTATISTIKY KARIÉRY|СТАТИСТИКА НА КАРИЕРАТА
+RESET CAREER|KARRIERE ZURÜCKSETZEN|RÉINITIALISER LA CARRIÈRE|REINICIAR CARRERA|REPOR CARREIRA|RESETOVAT KARIÉRU|СКИНУТИ КАР'ЄРУ|ZRESETUJ KARIERĘ|RESETOVAŤ KARIÉRU|НУЛИРАЙ КАРИЕРАТА
+CAREER|KARRIERE|CARRIÈRE|CARRERA|CARREIRA|KARIÉRA|КАР'ЄРА|KARIERA|KARIÉRA|КАРИЕРА
+League · Round|Liga · Runde|Ligue · Journée|Liga · Jornada|Liga · Jornada|Liga · Kolo|Ліга · Тур|Liga · Kolejka|Liga · Kolo|Лига · Кръг
+League:|Liga:|Ligue :|Liga:|Liga:|Liga:|Ліга:|Liga:|Liga:|Лига:
+Kick-off!|Anpfiff!|Coup d'envoi !|¡Saque inicial!|Pontapé de saída!|Výkop!|Початок матчу!|Rozpoczęcie meczu!|Výkop!|Начален сигнал!
+— Half-time —|— Halbzeit —|— Mi-temps —|— Descanso —|— Intervalo —|— Poločas —|— Перерва —|— Przerwa —|— Polčas —|— Почивка —
+KEY MOMENT:|SCHLÜSSELMOMENT:|MOMENT CLÉ :|MOMENTO CLAVE:|MOMENTO-CHAVE:|KLÍČOVÝ MOMENT:|КЛЮЧОВИЙ МОМЕНТ:|KLUCZOWY MOMENT:|KĽÚČOVÝ MOMENT:|КЛЮЧОВ МОМЕНТ:
+FULL TIME:|ABPFIFF:|COUP DE SIFFLET FINAL :|FINAL DEL PARTIDO:|FIM DO JOGO:|KONEC ZÁPASU:|КІНЕЦЬ МАТЧУ:|KONIEC MECZU:|KONIEC ZÁPASU:|КРАЙ НА МАЧА:
+VICTORY|SIEG|VICTOIRE|VICTORIA|VITÓRIA|VÚvHRA|ПЕРЕМОГА|ZWYCIĘSTWO|VÝHRA|ПОБЕДА
+DEFEAT|NIEDERLAGE|DÉFAITE|DERROTA|DERROTA|PROHRA|ПОРАЗКА|PORAŻKA|PREHRA|ЗАГУБА
+DRAW|UNENTSCHIEDEN|NUL|EMPATE|EMPATE|REMÍZA|НІЧИЯ|REMIS|REMÍZA|РАВЕНСТВО
+Match rating|Spielernote|Note du match|Nota del partido|Nota do jogo|Hodnocení zápasu|Рейтинг матчу|Ocena meczu|Hodnotenie zápasu|Оценка за мача
+Goals|Tore|Buts|Goles|Golos|Góly|Голи|Gole|Góly|Голове
+Assists|Vorlagen|Passes décisives|Asistencias|Assistências|Asistence|Асисти|Asysty|Asistencie|Асистенции
+GOAL for|TOR für|BUT pour|GOL de|GOLO para|GÓL pro|ГОЛ для|GOL dla|GÓL pre|ГОЛ за
+ score.| erzielen ein Tor.| marquent.| marcan.| marcam.| skórují.| забивають.| zdobywają bramkę.| skórujú.| вкарват.
+Midfield battle continues.|Der Kampf im Mittelfeld geht weiter.|La bataille au milieu continue.|La lucha en el centro del campo continúa.|A luta no meio-campo continua.|Boj v záloze pokračuje.|Боротьба в центрі поля триває.|Walka w środku pola trwa.|Boj v zálohe pokračuje.|Борбата в центъра продължава.
+A strong challenge goes in.|Ein harter Zweikampf.|Un tacle appuyé.|Entrada fuerte.|Entrada dura.|Tvrdý souboj.|Жорстка боротьба.|Ostry wślizg.|Tvrdý súćoj.|Остър двубой.
+The crowd sings loudly.|Die Fans singen laut.|Le public chante fort.|La afición canta con fuerza.|A bancada canta alto.|Fanoušci hlasitě zpívají.|Фанати голосно співають.|Kibice śpiewają głośno.|Fanúšikovia hlasno spievajú.|Феновете пеят силно.
+Corner cleared.|Ecke geklärt.|Corner dégagé.|Córner despejado.|Canto afastado.|Roh odvrácen.|Кутовий відбито.|Rzut rożny wybity.|Roh odvrátený.|Корнерът е изчистен.
+Shot flies wide!|Der Schuss geht vorbei!|Le tir passe à côté !|¡El disparo se va desviado!|O remate sai ao lado!|Střela letí mimo!|Удар повз ворота!|Strzał obok bramki!|Strela letí mimo!|Ударът минава встрани!
+Play stretched across the pitch.|Das Spiel ist auseinandergezogen.|Le jeu s'étire sur le terrain.|El juego se estira por el campo.|O jogo estica-se pelo relvado.|Hra se táhne po celém hřišti.|Гра розтягнулась по полю.|Gra rozciągnięta na całym boisku.|Hra sa ťahá po celom ihrisku.|Играта е разпъната по терена.
+Free kick, harmlessly delivered.|Frestoß, ungefährlich getreten.|Coup franc sans danger.|Falta lanzada sin peligro.|Livre sem perigo.|Volný kop bez nebezpečí.|Штрафний без небезпеки.|Rzut wolny bez zagrożenia.|Voľný kop bez nebezpečenstva.|Безопасен пряк свободен удар.
+GOAL!|TOR!|BUT !|¡GOL!|GOLO!|GÓL!|ГОЛ!|GOL!|GÓL!|ГОЛ!
+scores!|trifft!|marque !|¡marca!|marca!|skóruje!|забиває!|strzela gola!|skóruje!|вкарва!
+sets it up!|legt auf!|offre la passe !|¡da la asistencia!|faz a assistência!|připravuje gól!|віддає гольову!|asystuje!|pripravuje gól!|асистира!
+Great play from|Starke Aktion von|Belle action de|Gran jugada de|Grande jogada de|Skvělá akce hráče|Чудова гра від|Świetna akcja|Skvelá akcia hráča|Страхотна игра на
+Chance missed.|Chance vergeben.|Occasion manquée.|Ocasión perdida.|Oportunidade falhada.|Šance zahozena.|Момент змарновано.|Szansa zmarnowana.|Šanca zahodená.|Пропуснат шанс.
+Just wide!|Knapp vorbei!|Juste à côté !|¡Por poco!|Por pouco!|Těsně vedle!|Трохи повз!|Minimalnie obok!|Tesne vedľa!|На косъм!
+Nothing doing.|Nichts zu machen.|Rien à faire.|Nada que hacer.|Nada a fazer.|Nic z toho.|Нічого не вийшло.|Nic z tego.|Nič z toho.|Нищо не се получи.
+Mistake costs a goal.|Ein Fehler kostet ein Gegentor.|Une erreur coûte un but.|Un error cuesta un gol.|Um erro custa um golo.|Chyba stojí gól.|Помилка коштує гола.|Błąd kosztuje bramkę.|Chyba stojí gól.|Грешка струва гол.
+deals with it.|klärt die Situation.|gère la situation.|resuelve la jugada.|resolve a situação.|situaci zvládá.|розв'язує ситуацію.|radzi sobie z sytuacją.|situáciu zvláda.|се справя.
+Reserve match: reduced rewards|Reservespiel: geringere Belohnung|Match de réserve : récompenses réduites|Partido de filial: menos recompensas|Jogo da equipa B: menos recompensas|Zápas rezervy: nižší odměny|Матч резерву: менші нагороди|Mecz rezerw: mniejsze nagrody|Zápas rezervy: nižšie odmeny|Мач на резервите: по-малки награди
+Reserve match:|Reservespiel:|Match de réserve :|Partido de filial:|Jogo da equipa B:|Zápas rezervy:|Матч резерву:|Mecz rezerw:|Zápas rezervy:|Мач на резервите:
+Substitute appearance|Einwechslung|Entrée en jeu|Partido como suplente|Jogo como suplente|Střídání|Вихід на заміну|Występ z ławki|Striedaňie|Влизане като резерва
+You start on the bench...|Du startest auf der Bank ...|Tu démarres sur le banc...|Empiezas en el banquillo...|Começas no banco...|Začínáš na lavičce...|Ти починаєш на лаві...|Zaczynasz na ławce...|Začínaš na lavičke...|Започваш на пейката...
+You come on as a substitute!|Du wirst eingewechselt!|Tu entres en jeu !|¡Entras como suplente!|Entras como suplente!|Jdeš na hřiště!|Ти виходиш на заміну!|Wchodzisz na boisko!|Ideš na ihrisko!|Влизаш като резерва!
+Shot incoming!|Schuss kommt!|Tir en approche !|¡Disparo a puerta!|Remate a caminho!|Střela se blíží!|Удар по воротах!|Strzał leci!|Strela sa blíži!|Удар към вратата!
+Long-range thunderbolt!|Distanzhammer!|Frappe surpuissante de loin !|¡Latigazo de lejos!|Petardo de longe!|Dělovka z dálky!|Дальній удар!|Bomba z dystansu!|Delovka z diaľky!|Силен удар отдалеч!
+Penalty!|Elfmeter!|Penalty !|¡Penalti!|Penálti!|Penalta!|Пенальті!|Rzut karny!|Penalta!|Дузпа!
+Long distribution|Langer Abwurf|Relance longue|Saque largo|Distribuição longa|Dlouhá rozehra|Довга передача|Długie wznowienie|Dlhá rozohra|Дълго разпределение
+1v1 tackle|1-gegen-1-Zweikampf|Tacle en 1 contre 1|Entrada 1 contra 1|Desarme 1 para 1|Souboj jeden na jednoho|Відбір 1 на 1|Odbiór 1 na 1|Súboj jeden na jedného|Отнемане 1 на 1
+Defend the cross|Flanke abwehren|Défendre le centre|Defiende el centro|Defende o cruzamento|Odvrať centr|Захисти навіс|Obroń dośrodkowanie|Odvráť center|Отбрани центрирането
+Block the shot|Schuss blocken|Contrer le tir|Bloquea el tiro|Bloqueia o remate|Zablokuj střelu|Заблокуй удар|Zablokuj strzał|Zablokuj strelu|Блокирай удара
+Corner: attack it!|Ecke: Köpfen!|Corner : attaque-le !|Córner: ¡ataca el balón!|Canto: ataca a bola!|Roh: jdi do hlavičky!|Кутовий: атакуй м'яч!|Rożny: atakuj piłkę!|Roh: choď do hlavičky!|Корнер: атакувай топката!
+Through ball|Steilpass|Passe en profondeur|Pase al hueco|Passe em profundidade|Kolmá přihrávka|Пас між захисниками|Podanie prostopadłe|Kolmá prihrávka|Пас в празното
+Intercept the pass|Pass abfangen|Intercepter la passe|Intercepta el pase|Intercepta o passe|Zachyť přihrávku|Перехопи передачу|Przechwyć podanie|Zachyť prihrávku|Прехвани подаването
+Long-range shot|Fernschuss|Tir de loin|Disparo lejano|Remate de longe|Střela z dálky|Удар здалеку|Strzał z dystansu|Strela z diaľky|Удар от разстояние
+Killer pass|Traumpass|Passe assassine|Pase letal|Passe de morte|Zabijácká přihrávka|Вбивча передача|Zabójcze podanie|Zabijacká prihrávka|Убийствен пас
+1v1 finish|1-gegen-1-Abschluss|Finition en 1 contre 1|Definición mano a mano|Finalização 1 para 1|Zakončení sám na sám|Завершення 1 на 1|Wykończenie sam na sam|Zakončenie sám na sám|Завършване 1 на 1
+Dribble past the last man|Letzten Mann ausdribbeln|Dribbler le dernier défenseur|Regatea al último hombre|Dribla o último homem|Obejdi posledního obránce|Обіграй останнього|Miń ostatniego obrońcę|Obíď posledného obrancu|Подмини последния
+Header!|Kopfball!|Tête !|¡Cabezazo!|Cabeceamento!|Hlavička!|Удар головою!|Główka!|Hlavička!|Удар с глава!
+Edge-of-box strike|Schuss von der Strafraumkante|Frappe en bord de surface|Disparo al borde del área|Remate à entrada da área|Střela z hrany vápna|Удар з краю штрафного|Strzał sprzed pola karnego|Strela z hrany vápna|Удар от ръба на наказателното поле
+Tap LEFT, MIDDLE or RIGHT of the goal to dive. Watch the ball!|Tippe LINKS, MITTE oder RECHTS, um zu hechten. Beobachte den Ball!|Touche GAUCHE, MILIEU ou DROITE pour plonger. Surveille le ballon !|Toca IZQUIERDA, CENTRO o DERECHA para lanzarte. ¡Vigila el balón!|Toca ESQUERDA, CENTRO ou DIREITA para mergulhar. Vigia a bola!|Klepni VLEVO, DOSTŘED nebo VPRAVO a skoč. Sleduj míč!|Торкнись ЛІВОРУЧ, ПО ЦЕНТРУ чи ПРАВОРУЧ, щоб стрибнути. Стеж за м'ячем!|Dotknij LEWO, ŚRODEK lub PRAWO, aby się rzucić. Obserwuj piłkę!|Klepni VĽAVO, STRED alebo VPRAVO a skoč. Sleduj loptu!|Докосни ЛЯВО, ЦЕНТЪР или ДЯСНО за скок. Следи топката!
+Tap when the marker is in the green zone (gold = perfect).|Tippe, wenn der Marker in der grünen Zone ist (Gold = perfekt).|Touche quand le curseur est dans la zone verte (or = parfait).|Toca cuando el marcador esté en la zona verde (oro = perfecto).|Toca quando o marcador estiver na zona verde (ouro = perfeito).|Klepni, když je ukazatel v zelené zóně (zlatá = perfektní).|Торкнись, коли маркер у зеленій зоні (золото = ідеально).|Dotknij, gdy znacznik jest w zielonej strefie (złoto = idealnie).|Klepni, keď je ukazovateľ v zelenej zóne (zlatá = perfektné).|Докосни, когато маркерът е в зелената зона (злато = перфектно).
+Tap the OPEN lane (green ring). Defenders keep shifting!|Tippe auf die FREIE Bahn (grüner Ring). Die Verteidiger bewegen sich!|Touche la voie LIBRE (cercle vert). Les défenseurs bougent !|Toca el carril LIBRE (aro verde). ¡Los defensas se mueven!|Toca na faixa LIVRE (anel verde). Os defesas mexem-se!|Klepni na VOLNÝ pruh (zelený kruh). Obránci se pořád posouvají!|Торкнись ВІЛЬНОЇ доріжки (зелене коло). Захисники переміщуються!|Dotknij WOLNEGO toru (zielony okrąg). Obrońcy się przesuwają!|Klepni na VOĽNÝ pruh (zelený kruh). Obrancovia sa stále presúvajú!|Докосни СВОБОДНАТА лента (зелен кръг). Защитниците се местят!
+Keys:|Tasten:|Touches :|Teclas:|Teclas:|Klávesy:|Клавіші:|Klawisze:|Klávesy:|Клавиши:
+or Space|oder Leertaste|ou Espace|o Espacio|ou Espaço|nebo mezerník|або пробіл|lub spacja|alebo medzerník|или интервал
+TACKLE!|GRÄTSCHE!|TACLE !|¡ENTRA!|DESARMA!|SKLUZ!|ВІДБІР!|ODBIERZ!|SKLUZ!|ОТНЕМИ!
+INTERCEPT!|ABFANGEN!|INTERCEPTE !|¡INTERCEPTA!|INTERCETA!|ZACHYŤ!|ПЕРЕХОПЛЕННЯ!|PRZECHWYĆ!|ZACHYŤ!|ПРЕХВАНИ!
+HEAD IT!|KÖPFEN!|DE LA TÊTE !|¡CABEZAZO!|CABECEIA!|HLAVIČKA!|ГОЛОВОЮ!|GŁÓWKA!|HLAVIČKA!|С ГЛАВА!
+PASS!|PASS!|PASSE !|¡PASA!|PASSA!|PŘIHRAJ!|ПЕРЕДАЙ!|PODAJ!|PRIHRAJ!|ПОДАЙ!
+SHOOT!|SCHIESSEN!|TIRE !|¡DISPARA!|REMATA!|STŘÍLEJ!|БИЙ!|STRZELAJ!|STREĽ!|СТРЕЛЯЙ!
+◀ DIVE|◀ HECHTEN|◀ PLONGER|◀ LANZARSE|◀ MERGULHAR|◀ SKOK|◀ СТРИБОК|◀ RZUT|◀ SKOK|◀ СКОК
+▲ HOLD|▲ HALTEN|▲ RESTER|▲ QUIETO|▲ FICAR|▲ STŮJ|▲ СТОЯТИ|▲ STÓJ|▲ STOJ|▲ СТОЙ
+DIVE ▶|HECHTEN ▶|PLONGER ▶|LANZARSE ▶|MERGULHAR ▶|SKOK ▶|СТРИБОК ▶|RZUT ▶|SKOK ▶|СКОК ▶
+◀ LEFT|◀ LINKS|◀ GAUCHE|◀ IZQ.|◀ ESQ.|◀ VLEVO|◀ ЛІВО|◀ LEWO|◀ VĽAVO|◀ ЛЯВО
+▲ MID|▲ MITTE|▲ MILIEU|▲ CENTRO|▲ CENTRO|▲ STŘED|▲ ЦЕНТР|▲ ŚRODEK|▲ STRED|▲ ЦЕНТЪР
+RIGHT ▶|RECHTS ▶|DROITE ▶|DCHA. ▶|DIR. ▶|VPRAVO ▶|ПРАВО ▶|PRAWO ▶|VPRAVO ▶|ДЯСНО ▶
+MISS!|DANEBEN!|RATÉ !|¡FALLASTE!|FALHASTE!|VEDLE!|МИМО!|PUDŁO!|MIMO!|ПРОПУСК!
+GOOD|GUT|BIEN|BIEN|BOM|DOBRÉ|ДОБРЕ|DOBRZE|DOBRÉ|ДОБРЕ
+PERFECT!|PERFEKT!|PARFAIT !|¡PERFECTO!|PERFEITO!|PERFEKTNÍ!|ІДЕАЛЬНО!|IDEALNIE!|PERFEKTNÉ!|ПЕРФЕКТНО!
+SEASON|SAISON|SAISON|TEMPORADA|ÉPOCA|SEZÓNA|СЕЗОН|SEZON|SEZÓNA|СЕЗОН
+COMPLETE|ABGESCHLOSSEN|TERMINÉE|COMPLETA|CONCLUÍDA|DOKONČENA|ЗАВЕРШЕНО|ZAKOŃCZONY|DOKONČENÁ|ПРИКЛЮЧИ
+Finished|Abschluss auf Rang|Classé|Terminaste en el puesto|Terminou em|Skončil jsi|Ти фінішував|Zakończyłeś na miejscu|Skončil si|Завърши на
+ in the | in der | en | en la | na | v | у | w | v | в 
+promoted!|aufgestiegen!|promu !|¡ascenso!|promovido!|postup!|підвищення!|awans!|postup!|промоция!
+Average rating|Durchschnittsnote|Note moyenne|Nota media|Nota média|Průměrné hodnocení|Середній рейтинг|Średnia ocena|Priemerné hodnotenie|Средна оценка
+Prize money|Preisgeld|Prime|Premio en metálico|Prémio monetário|Prémie|Призові|Premia pieniężna|Prémia|Награден фонд
+TRANSFER OFFERS|TRANSFERANGEBOTE|OFFRES DE TRANSFERT|OFERTAS DE TRASPASO|OFERTAS DE TRANSFERÊNCIA|NABÍDKY NA PŘESTUP|ТРАНСФЕРНІ ПРОПОЗИЦІЇ|OFERTY TRANSFEROWE|PONUKY NA PRESTUP|ТРАНСФЕРНИ ОФЕРТИ
+BUY-OUT|ABLÖSE|RACHAT|CLÁUSULA|CLÁUSULA|VÝKUP|ВИКУП|WYKUP|VÝKUP|ОТКУП
+FREE AGENT|VEREINSLOS|JOUEUR LIBRE|AGENTE LIBRE|AGENTE LIVRE|VOLNÝ HRÁČ|ВІЛЬНИЙ АГЕНТ|WOLNY ZAWODNIK|VOĽNÝ HRÁČ|СВОБОДЕН ИГРАЧ
+NO TRANSFER FEE|OHNE ABLÖSE|SANS INDEMNITÉ|SIN TRASPASO|SEM TRANSFERÊNCIA|BEZ ODSTUPNÉHO|БЕЗ ТРАНСФЕРУ|BEZ KWOTY TRANSFEROWEJ|BEZ ODSTUPNÉHO|БЕЗ ТРАНСФЕРНА ТАКСА
+EXTEND CONTRACT|VERTRAG VERLÄNGERN|PROLONGER LE CONTRAT|RENOVAR CONTRATO|RENOVAR CONTRATO|PRODLOUŽIT SMLOUVU|ПРОДОВЖИТИ КОНТРАКТ|PRZEDŁUŻ KONTRAKT|PREDĽIŽIŤ ZMLUVU|ПОДНОВИ ДОГОВОРА
+STAY AT|BLEIBEN BEI|RESTER À|QUEDARSE EN|FICAR NO|ZŮSTAT V|ЗАЛИШИТИСЬ В|ZOSTAŃ W|ZOSTAŤ V|ОСТАНИ В
+(PROMOTED)|(AUFGESTIEGEN)|(PROMU)|(ASCENDIDO)|(PROMOVIDO)|(POSTUP)|(ПІДВИЩЕННЯ)|(AWANS)|(POSTUP)|(ПРОМОЦИЯ)
+(RELEGATED)|(ABGESTIEGEN)|(RELÉGUÉ)|(DESCENDIDO)|(RELEGADO)|(SESTUP)|(ВИЛІТ)|(SPADEK)|(ZOSTUP)|(ИЗПАДАНЕ)
+Relegated to the next tier|In die nächste Stufe abgestiegen|Relégué à la division inférieure|Descenso a la categoría inferior|Descida ao escalão inferior|Sestup do nižší ligy|Вилітаєте до нижчої ліги|Spadek do niższej ligi|Zostup do nižšej ligy|Изпадане в по-ниска лига
+Qualified for the Champions Cup!|Für den Champions Cup qualifiziert!|Qualifié pour la Coupe des Champions !|¡Clasificado para la Copa de Campeones!|Apurado para a Taça dos Campeões!|Postup do Poháru mistrů!|Кваліфікація до Кубка чемпіонів!|Awans do Pucharu Mistrzów!|Postup do Pohára majstrov!|Класиране за Купата на шампионите!
+League champions!|Meister!|Champions de la ligue !|¡Campeones de liga!|Campeões da liga!|Mistrů ligy!|Чемпіони ліги!|Mistrzowie ligi!|Majstri ligy!|Шампиони на лигата!
+Player of the Year!|Spieler des Jahres!|Joueur de l'année !|¡Jugador del año!|Jogador do ano!|Hráč roku!|Гравець року!|Piłkarz roku!|Hráč roka!|Играч на годината!
+BALLON D’OR!|BALLON D’OR!|BALLON D’OR !|¡BALÓN DE ORO!|BOLA DE OURO!|ZLATÝ MÍČ!|ЗОЛОТИЙ М'ЯЧ!|ZŁOTA PIŁKA!|ZLATÁ LOPTA!|ЗЛАТНАТА ТОПКА!
+Contract expired: extend or go free|Vertrag abgelaufen: verlängern oder ablösefrei wechseln|Contrat expiré : prolonge ou pars libre|Contrato expirado: renueva o sal libre|Contrato expirado: renova ou sai livre|Smlouva vypršela: prodluž, nebo odejdi zadarmo|Контракт завершено: продовжи або йди вільним агентом|Kontrakt wygasł: przedłuż lub odejdź za darmo|Zmluva vypršala: predĺž, alebo odíď zadarmo|Договорът изтече: поднови или си свободен
+1 year left on your contract|Noch 1 Jahr Vertragslaufzeit|Il reste 1 an à ton contrat|Te queda 1 año de contrato|Resta 1 ano de contrato|Do konce smlouvy zbývá 1 rok|До кінця контракту 1 рік|Do końca kontraktu 1 rok|Do konca zmluvy zostáva 1 rok|Остава 1 година от договора
+years left on your contract|Jahre Vertragslaufzeit|ans restent à ton contrat|años de contrato restantes|anos de contrato restantes|roky do konce smlouvy|роки до кінця контракту|lata do końca kontraktu|roky do konca zmluvy|години остават от договора
+No offers this year. Raise your rating and OVR.|Keine Angebote dieses Jahr. Verbessere Note und OVR.|Aucune offre cette année. Améliore ta note et ton OVR.|Sin ofertas este año. Mejora tu nota y tu OVR.|Sem ofertas este ano. Melhora a tua nota e o OVR.|Letos žádné nabídky. Zvyš hodnocení a OVR.|Цього року пропозицій немає. Підвищ рейтинг та OVR.|W tym roku brak ofert. Podnieś ocenę i OVR.|Tento rok žiadne ponuky. Zvýš hodnotenie a OVR.|Тази година няма оферти. Подобри оценката и OVR.
+season(s) left|Saison(s) übrig|saison(s) restante(s)|temporada(s) restante(s)|época(s) restante(s)|sezón zbývá|сезон(ів) залишилось|sezon(y) pozostało|sezón zostáva|сезона остават
+season(s)|Saison(s)|saison(s)|temporada(s)|época(s)|sezón(y)|сезон(и)|sezon(y)|sezón(y)|сезон(а)
+seasons|Saisons|saisons|temporadas|épocas|sezóny|сезони|sezony|sezóny|сезона
+season|Saison|saison|temporada|época|sezóna|сезон|sezon|sezóna|сезон
+agreed|vereinbart|convenu|acordado|acordado|dohodnuto|домовлено|uzgodnione|dohodnuté|договорено
+NATIONAL TEAM CALL-UP!|NATIONALMANNSCHAFT-NOMINIERUNG!|SÉLECTION EN ÉQUIPE NATIONALE !|¡CONVOCATORIA CON LA SELECCIÓN!|CONVOCATÓRIA PARA A SELEÇÃO!|NOMINACE DO REPREZENTACE!|ВИКЛИК ДО ЗБІРНОЇ!|POWOŁANIE DO REPREZENTACJI!|NOMINÁCIA DO REPREZENTÁCIE!|ПОВИКВАНЕ В НАЦИОНАЛНИЯ ОТБОР!
+Your form has earned a call-up. You now represent|Deine Form hat dir eine Nominierung eingebracht. Du spielst jetzt für|Ta forme t'a valu une sélection. Tu représentes désormais|Tu forma te ha dado una convocatoria. Ahora representas a|A tua forma valeu-te uma convocatória. Agora representas|Tvá forma ti vynesla pozvánku. Nyní reprezentuješ|Твоя форма принесла виклик. Тепер ти представляєш|Twoja forma przyniosła powołanie. Teraz reprezentujesz|Tvoja forma ti priniesla nomináciu. Teraz reprezentuješ|Формата ти донесе повикване. Сега представляваш
+Qualifiers come during the season and the World Cup every 4th season.|Qualifikationsspiele finden während der Saison statt, die Weltmeisterschaft alle 4 Saisons.|Les qualifications ont lieu pendant la saison, la Coupe du monde tous les 4 ans.|Las clasificatorias llegan durante la temporada y el Mundial cada 4 temporadas.|Os apuramentos acontecem durante a época e o Mundial a cada 4 épocas.|Kvalifikace se hrají během sezóny, mistrovství světa každou 4. sezónu.|Кваліфікація — протягом сезону, чемпіонат світу — кожного 4-го сезону.|Eliminacje odbywają się w sezonie, a mistrzostwa świata co 4. sezon.|Kvalifikácia sa hrá počas sezóny, majstrovstvá sveta každú 4. sezónu.|Квалификациите са през сезона, а световното първенство — на всеки 4 сезона.
+CUP WINNERS!|POKALSIEGER!|VAINQUEURS DE LA COUPE !|¡CAMPEONES DE COPA!|CAMPEÕES DA TAÇA!|VÍTĚZ POHÁRU!|ПЕРЕМОЖЦІ КУБКА!|ZDOBYWCY PUCHARU!|VÍŤAZ POHÁRA!|ШАМПИОНИ ЗА КУПАТА!
+You won the Cup Final!|Du hast das Pokalfinale gewonnen!|Tu as remporté la finale de la Coupe !|¡Ganaste la final de Copa!|Ganhaste a final da Taça!|Vyhrál jsi finále poháru!|Ти виграв фінал Кубка!|Wygrałeś finał pucharu!|Vyhral si finále pohára!|Спечели финала за Купата!
+Cup: through!|Pokal: weiter!|Coupe : qualifié !|Copa: ¡pasamos!|Taça: seguimos em frente!|Pohár: postupujeme!|Кубок: проходимо далі!|Puchar: awans!|Pohár: postupujeme!|Купа: напред!
+Knocked out of the Cup|Aus im Pokal|Éliminé de la Coupe|Eliminados de la Copa|Eliminados da Taça|Vyřazení z poháru|Виліт з Кубка|Odpadnięcie z pucharu|Vyradení z pohára|Отпадане от Купата
+Out of the Champions Cup|Aus im Champions Cup|Éliminé de la Coupe des Champions|Fuera de la Copa de Campeones|Fora da Taça dos Campeões|Konec v Poháru mistrů|Виліт з Кубка чемпіонів|Koniec w Pucharze Mistrzów|Koniec v Pohári majstrov|Отпадане от Купата на шампионите
+On to the next round.|Weiter in die nächste Runde.|Direction le tour suivant.|Pasamos a la siguiente ronda.|Segue para a próxima ronda.|Postupujeme do dalšího kola.|Йдемо в наступне коло.|Awans do kolejnej rundy.|Postupujeme do ďalšieho kola.|Напред към следващия кръг.
+(penalties)|(po penaltách)|(aux tirs au but)|(en penaltis)|(nos penáltis)|(na penalty)|(по пенальті)|(w karnych)|(po pokutových kopoch)|(след дузпи)
+International Qualifier|Länderspiel-Qualifikation|Qualification internationale|Clasificatoria internacional|Qualificação internacional|Mezinárodní kvalifikace|Міжнародна кваліфікація|Eliminacje reprezentacji|Medzinárodná kvalifikácia|Международна квалификация
+World Cup: eliminated|Weltmeisterschaft: ausgeschieden|Coupe du monde : éliminé|Mundial: eliminados|Mundial: eliminados|MS: vyřazeni|ЧС: виліт|MŚ: odpadnięcie|MS: vyradení|СП: отпадане
+WORLD CUP WINNERS!|WELTMEISTER!|CHAMPIONS DU MONDE !|¡CAMPEONES DEL MUNDO!|CAMPEÕES DO MUNDO!|MISTRŘI SVĚTA!|ЧЕМПІОНИ СВІТУ!|MISTRZOWIE ŚWIATA!|MAJSTRI SVETA!|ШАМПИОНИ НА СВЕТА!
+Champions of the world!|Weltmeister!|Champions du monde !|¡Campeones del mundo!|Campeões do mundo!|Mistrři světa!|Чемпіони світу!|Mistrzowie świata!|Majstri sveta!|Световни шампиони!
+World Cup: through!|WM: weiter!|Coupe du monde : qualifié !|Mundial: ¡pasamos!|Mundial: seguimos!|MS: postupujeme!|ЧС: проходимо далі!|MŚ: awans!|MS: postupujeme!|СП: напред!
+CHAMPIONS CUP WINNERS!|CHAMPIONS-CUP-SIEGER!|VAINQUEURS DE LA COUPE DES CHAMPIONS !|¡CAMPEONES DE LA COPA DE CAMPEONES!|CAMPEÕES DA TAÇA DOS CAMPEÕES!|VÍTĚZ POHÁRU MISTRŮ!|ПЕРЕМОЖЦІ КУБКА ЧЕМПІОНІВ!|ZDOBYWCY PUCHARU MISTRZÓW!|VÍŤAZ POHÁRA MAJSTROV!|ШАМПИОНИ НА КУПАТА НА ШАМПИОНИТЕ!
+Champions of Europe!|Europas Champions!|Champions d'Europe !|¡Campeones de Europa!|Campeões da Europa!|Mistrři Evropy!|Чемпіони Європи!|Mistrzowie Europy!|Majstri Európy!|Шампиони на Европа!
+Champions Cup: through!|Champions Cup: weiter!|Coupe des Champions : qualifié !|Copa de Campeones: ¡pasamos!|Taça dos Campeões: seguimos!|Pohár mistrů: postupujeme!|Кубок чемпіонів: проходимо!|Puchar Mistrzów: awans!|Pohár majstrov: postupujeme!|Купа на шампионите: напред!
+Champions Cup|Champions Cup|Coupe des Champions|Copa de Campeones|Taça dos Campeões|Pohár mistrů|Кубок чемпіонів|Puchar Mistrzów|Pohár majstrov|Купа на шампионите
+World Cup|Weltmeisterschaft|Coupe du monde|Mundial|Mundial|Mistrovství světa|Чемпіонат світу|Mistrzostwa świata|Majstrovstvá sveta|Световно първенство
+Domestic Cup|Landespokal|Coupe nationale|Copa nacional|Taça nacional|Domácí pohár|Національний кубок|Puchar krajowy|Domáci pohár|Национална купа
+Cup|Pokal|Coupe|Copa|Taça|Pohár|Кубок|Puchar|Pohár|Купа
+Quarter-Final|Viertelfinale|Quart de finale|Cuartos de final|Quartos de final|Čtvrtfinále|Чвертьфінал|Ćwierćfinał|Štvrťfinále|Четвъртфинал
+Semi-Final|Halbfinale|Demi-finale|Semifinal|Meia-final|Semifinále|Півфінал|Półfinał|Semifinále|Полуфинал
+Final|Finale|Finale|Final|Final|Finále|Фінал|Finał|Finále|Финал
+Rating|Note|Note|Nota|Nota|Hodnocení|Рейтинг|Ocena|Hodnotenie|Оценка
+PROMOTED IN THE SQUAD!|IM KADER AUFGESTIEGEN!|PROMOTION DANS L'EFFECTIF !|¡ASCENSO EN LA PLANTILLA!|SUBIDA NO PLANTEL!|POSUN V SESTAVĚ!|ПІДВИЩЕННЯ У СКЛАДІ!|AWANS W KADRZE!|POSUN V ZOSTAVE!|ПОВИШЕНИЕ В ОТБОРА!
+DROPPED DOWN THE PECKING ORDER|IN DER HACKORDNUNG ABGERUTSCHT|RÉTROGRADÉ DANS LA HIÉRARCHIE|DESCENSO EN LA JERARQUÍA|DESCIDA NA HIERARQUIA|SESTUP V HIERARCHII|ПАДІННЯ В ІЄРАРХІЇ|SPADEK W HIERARCHII|POKLES V HIERARCHII|ПОНИЖЕНИЕ В ИЕРАРХИЯТА
+You are now:|Du bist jetzt:|Tu es maintenant :|Ahora eres:|Agora és:|Nyní jsi:|Тепер ти:|Jesteś teraz:|Teraz si:|Сега си:
+Expect more game time.|Rechne mit mehr Spielzeit.|Attends-toi à plus de temps de jeu.|Espera más minutos.|Conta com mais tempo de jogo.|Čekej víc minut na hřišti.|Очікуй більше ігрового часу.|Spodziewaj się większej liczby minut.|Čakaj viac minút na ihrisku.|Очаквай повече игрово време.
+Train hard to win back your manager.|Trainiere hart, um deinen Trainer zurückzugewinnen.|Entraîne-toi dur pour regagner ton coach.|Entrena duro para recuperar al míster.|Treina muito para reconquistares o treinador.|Tvřdě trénuj, abys získal trenéra zpět.|Наполегливо тренуйся, щоб повернути довіру тренера.|Trenuj ciężko, by odzyskać zaufanie trenera.|Tvrdo trénuj, aby si získal trénera späť.|Тренирай здраво, за да си върнеш треньора.
+Armband lost|Kapitänsbinde verloren|Brassard perdu|Brazalete perdido|Braçadeira perdida|Kapitánská páska ztracena|Капітанську пов'язку втрачено|Opaska stracona|Kapitánska páska stratená|Лентата е загубена
+You are no longer a first-team starter, so the captaincy is gone.|Du bist kein Stammspieler mehr, die Kapitänsbinde ist weg.|Tu n'es plus titulaire, le brassard est perdu.|Ya no eres titular, así que pierdes el brazalete.|Já não és titular, por isso perdes a braçadeira.|Už nejsi hráč základní sestavy, kapitánská páska je pryč.|Ти більше не в основі, тож капітанство втрачено.|Nie jesteś już w pierwszym składzie, więc tracisz opaskę.|Už nie si v základnej zostave, kapitánska páska je preč.|Вече не си титуляр, затова губиш лентата.
+NAMED CLUB CAPTAIN!|ZUM KAPITÄN ERNANNT!|NOMMÉ CAPITAINE DU CLUB !|¡NOMBRADO CAPITÁN DEL CLUB!|NOMEADO CAPITÃO DO CLUBE!|JMENOVÁN KAPITÁNEM KLUBU!|ПРИЗНАЧЕНО КАПІТАНОМ КЛУБУ!|KAPITANEM KLUBU!|VYMENOVANÝ ZA KAPITÁNA KLUBU!|НАЗНАЧЕН ЗА КАПИТАН НА КЛУБА!
+You take the armband at|Du übernimmst die Binde bei|Tu prends le brassard à|Te pones el brazalete en|Assumes a braçadeira no|Přebíráš kapitánskou pásku v|Ти отримуєш пов'язку в|Przejmujesz opaskę w|Preberaš kapitánsku pásku v|Поемаш лентата в
++15% wage and Captain Team Talks before cup, European and international nights.|+15 % Gehalt und Kapitäns-Ansprachen vor Pokal-, Europa- und Länderspielen.|+15 % de salaire et discours de capitaine avant les matchs de coupe, européens et internationaux.|+15 % de salario y charlas de capitán antes de partidos de copa, europeos e internacionales.|+15 % de salário e palestras de capitão antes de jogos de taça, europeus e internacionais.|+15 % k platu a kapitánské proslovy před pohárovými, evropskými a reprezentačními zápasy.|+15 % до зарплати та промови капітана перед кубковими, європейськими й міжнародними матчами.|+15 % do pensji i przemowy kapitana przed meczami pucharowymi, europejskimi i reprezentacji.|+15 % k platu a kapitánske príhovory pred pohárovými, európskymi a reprezentačnými zápasmi.|+15 % към заплатата и капитански речи преди купови, европейски и международни мачове.
+NATIONAL TEAM CAPTAIN!|KAPITÄN DER NATIONALMANNSCHAFT!|CAPITAINE DE L'ÉQUIPE NATIONALE !|¡CAPITÁN DE LA SELECCIÓN!|CAPITÃO DA SELEÇÃO!|KAPITÁN REPREZENTACE!|КАПІТАН ЗБІРНОЇ!|KAPITAN REPREZENTACJI!|KAPITÁN REPREZENTÁCIE!|КАПИТАН НА НАЦИОНАЛНИЯ ОТБОР!
+You now lead|Du führst jetzt|Tu diriges désormais|Ahora lideras a|Agora lideras|Nyní vedeš|Тепер ти очолюєш|Teraz prowadzisz|Teraz vedieš|Сега водиш
+as captain.|als Kapitän an.|en tant que capitaine.|como capitán.|como capitão.|jako kapitán.|як капітан.|jako kapitan.|ako kapitán.|като капитан.
+CAPTAIN TEAM TALK|KAPITÄNSANSPRACHE|DISCOURS DU CAPITAINE|CHARLA DEL CAPITÁN|PALESTRA DO CAPITÃO|KAPITÁNSKÝ PROSLOV|ПРОМОВА КАПІТАНА|PRZEMOWA KAPITANA|KAPITÁNSKY PRÍHOVOR|РЕЧ НА КАПИТАНА
+Big match ahead. How do you address the squad?|Ein großes Spiel steht an. Wie sprichst du zum Team?|Gros match à venir. Que dis-tu à l'équipe ?|Gran partido por delante. ¿Cómo te diriges al equipo?|Grande jogo pela frente. Como falas à equipa?|Čeká nás velký zápas. Jak promluvíš k týmu?|Попереду великий матч. Що скажеш команді?|Przed nami ważny mecz. Jak przemówisz do drużyny?|Čaká nás veľký zápas. Ako prehovoríš k tímu?|Предстои голям мач. Какво казваш на отбора?
+FIRE THEM UP|ZÜNDE SIE AN|MOTIVE-LES À BLOC|ENCIÉNDELOS|INFLAMA-OS|ROZPAL JE|ЗАВЕДИ ЇХ|ROZPAL ICH|ROZPAL ICH|ВЪЗПАЛИ ГИ
+risky, big boost|riskant, großer Schub|risqué, gros boost|arriesgado, gran impulso|arriscado, grande impulso|riskantní, velký bonus|ризиковано, великий бонус|ryzykowne, duży bonus|riskantné, veľký bonus|рисковано, голям тласък
+STAY CALM|RUHIG BLEIBEN|RESTE CALME|MANTÉN LA CALMA|MANTÉM A CALMA|ZACHOVEJ KLID|ЗБЕРИ СПОКІЙ|ZACHOWAJ SPOKÓJ|ZACHOVAJ POKOJ|ЗАПАЗИ СПОКОЙСТВИЕ
+safe, small boost|sicher, kleiner Schub|sûr, petit boost|seguro, pequeño impulso|seguro, pequeno impulso|bezpečné, malý bonus|безпечно, малий бонус|bezpiecznie, mały bonus|bezpečné, malý bonus|безопасно, малък тласък
+STICK TO THE PLAN|BEI DEM PLAN BLEIBEN|RESTE AU PLAN|SIGUE EL PLAN|SEGUE O PLANO|DRŽ SE PLÁNU|ДОТРИМУЙСЯ ПЛАНУ|TRZYMAJ SIĘ PLANU|DRŽ SA PLÁNU|ДЪРЖИ СЕ ЗА ПЛАНА
+reliable boost|verlässlicher Schub|boost fiable|impulso fiable|impulso fiável|spolehlivý bonus|надійний бонус|pewny bonus|spoľahlivý bonus|надежден тласък
+MID-SEASON WINDOW|WINTERTRANSFERFENSTER|MERCATO D'HIVER|MERCADO DE INVIERNO|MERCADO DE INVERNO|ZIMNÍ PŘESTUPNÍ OKNO|ЗИМОВЕ ВІКНО|OKNO TRANSFEROWE|ZIMNÉ PRESTUPOVÉ OKNO|ЗИМНИ ТРАНСФЕРИ
+Clubs are scouting you. Agree a move now and it happens in the summer.|Vereine beobachten dich. Einigung jetzt, Wechsel im Sommer.|Des clubs te repèrent. Accepte un transfert maintenant, il aura lieu cet été.|Hay clubes siguiéndote. Acuerda ahora un traspaso y se hará en verano.|Há clubes a observar-te. Acorda já uma mudança e acontece no verão.|Kluby tě sledují. Dohodni přestup teď a probehne v létě.|Клуби стежать за тобою. Домовся зараз — перехід влітку.|Kluby cię obserwują. Uzgodnij ruch teraz, a nastąpi latem.|Kluby ťa sledujú. Dohodni prestup teraz a uskutoční sa v lete.|Клубове те следят. Договори преход сега и той ще е през лятото.
+NO THANKS|NEIN DANKE|NON MERCI|NO, GRACIAS|NÃO, OBRIGADO|NE, DÍKY|НІ, ДЯКУЮ|NIE, DZIĘKUJĘ|NIE, ĎAKUJEM|НЕ, БЛАГОДАРЯ
+Champions League|Champions League|Ligue des champions|Liga de Campeones|Liga dos Campeões|Liga mistrů|Ліга чемпіонів|Liga Mistrzów|Liga majstrov|Шампионска лига
+Europa League|Europa League|Ligue Europa|Europa League|Liga Europa|Evropská liga|Ліга Європи|Liga Europy|Európska liga|Лига Европа
+Conference League|Conference League|Ligue Europa Conférence|Conference League|Liga Conferência|Konferenční liga|Ліга конференцій|Liga Konferencji|Konferenčná liga|Лига на конференциите
+Automatic promotion|Direkter Aufstieg|Promotion directe|Ascenso directo|Subida direta|Přímý postup|Пряме підвищення|Awans bezpośredni|Priamy postup|Директна промоция
+Play-offs|Play-offs|Barrages|Play-offs|Play-offs|Baráž|Плей-оф|Baraże|Baráž|Бараж
+Relegation|Abstieg|Relégation|Descenso|Descida|Sestup|Виліт|Spadek|Zostup|Изпадане
+Energy|Energie|Énergie|Energía|Energia|Energie|Енергія|Energia|Energia|Енергия
+Mood|Stimmung|Moral|Ánimo|Moral|Nálada|Настрій|Nastrój|Nálada|Настроение
+Mood +|Stimmung +|Moral +|Ánimo +|Moral +|Nálada +|Настрій +|Nastrój +|Nálada +|Настроение +
+LUXURY SHOP & STAFF|LUXUSSHOP & STAFF|BOUTIQUE DE LUXE & STAFF|TIENDA DE LUJO Y STAFF|LOJA DE LUXO E STAFF|LUXUSNÍ OBCHOD A TÝM|РОЗКІШНИЙ МАГАЗИН І ШТАБ|SKLEP LUKSUSOWY I SZTAB|LUXUSNÝ OBCHOD A TÍM|ЛУКСОЗЕН МАГАЗИН И ЕКИП
+LUXURY SHOP|LUXUSSHOP|BOUTIQUE DE LUXE|TIENDA DE LUJO|LOJA DE LUXO|LUXUSNÍ OBCHOD|РОЗКІШНИЙ МАГАЗИН|SKLEP LUKSUSOWY|LUXUSNÝ OBCHOD|ЛУКСОЗЕН МАГАЗИН
+STAFF|BETREUERSTAB|STAFF|EQUIPO|EQUIPA|TÝM|ШТАБ|SZTAB|TÍM|ЕКИП
+LIFESTYLE|LIFESTYLE|STYLE DE VIE|ESTILO DE VIDA|ESTILO DE VIDA|ŽIVOTNÍ STYL|СПОСІБ ЖИТТЯ|STYL ŻYCIA|ŽIVOTNÝ ŠTÝL|НАЧИН НА ЖИВОТ
+Nutritionist|Ernährungsberater|Nutritionniste|Nutricionista|Nutricionista|Nutriční poradce|Дієтолог|Dietetyk|Nutričný poradca|Диетолог
+Physiotherapist|Physiotherapeut|Kinésithérapeute|Fisioterapeuta|Fisioterapeuta|Fyzioterapeut|Фізіотерапевт|Fizjoterapeuta|Fyzioterapeut|Физиотерапевт
+Part-time Nutritionist|Teilzeit-Ernährungsberater|Nutritionniste à temps partiel|Nutricionista a tiempo parcial|Nutricionista a tempo parcial|Nutriční poradce na částečný úvazek|Дієтолог за суміщенням|Dietetyk na pół etatu|Nutričný poradca na čiastočný úväzok|Диетолог на половин ден
+Club Nutritionist|Vereins-Ernährungsberater|Nutritionniste du club|Nutricionista del club|Nutricionista do clube|Klubový nutriční poradce|Клубний дієтолог|Dietetyk klubowy|Klubový nutričný poradca|Клубен диетолог
+Elite Nutrition Team|Elite-Ernährungsteam|Équipe de nutrition d'élite|Equipo élite de nutrición|Equipa de nutrição de elite|Elitní nutriční tým|Елітна команда дієтологів|Elitarny zespół dietetyków|Elitný nutričný tím|Елитен диетичен екип
+Club Physio|Vereinsphysio|Kiné du club|Fisio del club|Fisio do clube|Klubový fyzio|Клубний фізіо|Fizjo klubowy|Klubový fyzio|Клубен физио
+Senior Physiotherapist|Leitender Physiotherapeut|Kinésithérapeute senior|Fisioterapeuta sénior|Fisioterapeuta sénior|Hlavní fyzioterapeut|Старший фізіотерапевт|Starszy fizjoterapeuta|Hlavný fyzioterapeut|Старши физиотерапевт
+Medical Team|Medizinisches Team|Équipe médicale|Equipo médico|Equipa médica|Zdravotnický tým|Медична команда|Zespół medyczny|Zdravotnícky tím|Медицински екип
+Top Football Agent (+20% wage, more offers)|Top-Spielerberater (+20 % Gehalt, mehr Angebote)|Super-agent (+20 % de salaire, plus d'offres)|Agente top (+20 % de salario, más ofertas)|Agente de topo (+20 % de salário, mais ofertas)|Top fotbalový agent (+20 % plat, více nabídek)|Топ-агент (+20 % зарплати, більше пропозицій)|Top agent piłkarski (+20 % pensji, więcej ofert)|Top futbalový agent (+20 % plat, viac ponúk)|Топ агент (+20 % заплата, повече оферти)
+Top Football Agent|Top-Spielerberater|Super-agent|Agente top|Agente de topo|Top fotbalový agent|Топ-агент|Top agent piłkarski|Top futbalový agent|Топ агент
+Cars|Autos|Voitures|Coches|Carros|Auta|Авто|Samochody|Autá|Коли
+Real Estate|Immobilien|Immobilier|Inmuebles|Imóveis|Nemovitosti|Нерухомість|Nieruchomości|Nehnuteľnosti|Имоти
+Luxury Gear|Luxus-Ausrüstung|Équipement de luxe|Equipamiento de lujo|Equipamento de luxo|Luxusní vybavení|Розкішне спорядження|Luksusowy sprzęt|Luxusné vybavenie|Луксозна екипировка
+Used Hatchback|Gebrauchter Kleinwagen|Citadine d'occasion|Utilitario usado|Citadino usado|Ojetý hatchback|Вживаний хетчбек|Używany hatchback|Ojazdený hatchback|Употребяван хечбек
+Sports Coupe|Sportcoupé|Coupé sportif|Cupé deportivo|Coupé desportivo|Sportovní kupé|Спортивне купе|Sportowe coupe|Športové kupé|Спортно купе
+Supercar|Supersportwagen|Supercar|Superdeportivo|Superdesportivo|Supersport|Суперкар|Supersamochód|Supersport|Суперкар
+Hypercar|Hypercar|Hypercar|Hiperdeportivo|Hiperdesportivo|Hypercar|Гіперкар|Hipersamochód|Hypercar|Хиперкар
+Rented Flat|Mietwohnung|Appartement loué|Piso de alquiler|Apartamento arrendado|Pronajatý byt|Орендована квартира|Wynajęte mieszkanie|Prenajatý byt|Нает апартамент
+City Apartment|Stadtwohnung|Appartement en ville|Apartamento en la ciudad|Apartamento na cidade|Městský byt|Міська квартира|Mieszkanie w mieście|Mestský byt|Градски апартамент
+Luxury Villa|Luxusvilla|Villa de luxe|Villa de lujo|Vivenda de luxo|Luxusní vila|Розкішна вілла|Luksusowa willa|Luxusná vila|Луксозна вила
+Private Mansion|Privates Anwesen|Manoir privé|Mansión privada|Mansão privada|Soukromé sídlo|Приватний маєток|Prywatna rezydencja|Súkromné sídlo|Частно имение
+Custom Cleats|Maßgefertigte Schuhe|Crampons sur mesure|Botas a medida|Chuteiras personalizadas|Kopačky na míru|Бутси на замовлення|Korki na zamówienie|Kopačky na mieru|Бутонки по поръчка
+Designer Watches|Designeruhren|Montres de luxe|Relojes de diseño|Relógios de luxo|Designerské hodinky|Дизайнерські годинники|Zegarki projektanckie|Dizajnérske hodinky|Дизайнерски часовници
+Private Jet|Privatjet|Jet privé|Jet privado|Jato privado|Soukromý tryskáč|Приватний літак|Prywatny odrzutowiec|Súkromné lietadlo|Частен самолет
+Fame/wk|Ruhm/Woche|célébrité/sem.|fama/sem.|fama/sem.|sláva/týd.|слава/тиж.|sława/tydz.|sláva/týž.|слава/седм.
+Upkeep|Unterhalt|Entretien|Mantenimiento|Manutenção|Údržba|Утримання|Utrzymanie|Údržba|Поддръжка
+Sessions this week|Einheiten diese Woche|Séances cette semaine|Sesiones esta semana|Sessões esta semana|Tréninky tento týden|Тренувань цього тижня|Treningi w tym tygodniu|Tréningy tento týždeň|Тренировки тази седмица
+each costs 15 energy|jede kostet 15 Energie|chacune coûte 15 d'énergie|cada una cuesta 15 de energía|cada uma custa 15 de energia|každý stojí 15 energie|кожне коштує 15 енергії|każdy kosztuje 15 energii|každý stojí 15 energie|всяка струва 15 енергия
+Higher stats cost much more XP and money. Rest between matches restores energy.|Höhere Werte kosten viel mehr XP und Geld. Ruhe zwischen Spielen stellt Energie wieder her.|Les stats élevées coûtent bien plus d'XP et d'argent. Le repos entre les matchs rend de l'énergie.|Los atributos altos cuestan mucho más XP y dinero. Descansar entre partidos recupera energía.|Atributos altos custam muito mais XP e dinheiro. Descansar entre jogos recupera energia.|Vyšší dovednosti stojí mnohem víc XP a peněz. Odpočinek mezi zápasy obnovuje energii.|Вищі навички коштують набагато більше XP і грошей. Відпочинок між матчами відновлює енергію.|Wyższe umiejętności kosztują znacznie więcej XP i pieniędzy. Odpoczynek między meczami odnawia energię.|Vyššie zručnosti stoja oveľa viac XP a peňazí. Odpočinok medzi zápasmi obnovuje energiu.|По-високите умения струват много повече XP и пари. Почивката между мачовете възстановява енергия.
+INJURY!|ZERRUNG!|BLESSURE !|¡LESIÓN!|LESÃO!|ZRANĚNÍ!|ТРАВМА!|KONTUZJA!|ZRANENIE!|КОНТУЗИЯ!
+Minor knock|Leichte Prellung|Petit choc|Golpe leve|Pancada ligeira|Lehký úder|Легкий удар|Lekkie stłuczenie|Ľahký úder|Леко охлузване
+Muscle strain|Muskelzerrung|Élongation musculaire|Distensión muscular|Distensão muscular|Natažený sval|Розтягнення м'яза|Naciągnięty mięsień|Natiahnutý sval|Мускулно разтежение
+Serious injury|Schwere Verletzung|Blessure grave|Lesión grave|Lesão grave|Vážné zranění|Серйозна травма|Poważna kontuzja|Vážne zranenie|Сериозна контузия
+out for|fällt aus für|absent pour|baja durante|fora por|mimo hru na|поза грою на|pauza na|mimo hry na|извън игра за
+weeks.|Wochen.|semaines.|semanas.|semanas.|týdnů.|тижнів.|tygodni.|týždňov.|седмици.
+Hurt in training.|Im Training verletzt.|Blessé à l'entraînement.|Lesionado en el entrenamiento.|Lesionado no treino.|Zranění v tréninku.|Травма на тренуванні.|Uraz na treningu.|Zranenie na tréningu.|Контузия на тренировка.
+SKIP MATCH (INJURED)|ZUSCHAUEN (VERLETZT)|PASSER LE MATCH (BLESSÉ)|SALTAR PARTIDO (LESIONADO)|SALTAR JOGO (LESIONADO)|PŘESKOČIT ZÁPAS (ZRANĚN)|ПРОПУСТИТИ МАТЧ (ТРАВМА)|POMIŃ MECZ (KONTUZJA)|PRESKOČIŤ ZÁPAS (ZRANENÝ)|ПРОПУСНИ МАЧА (КОНТУЗИЯ)
+Injury|Verletzung|Blessure|Lesión|Lesão|Zranění|Травма|Kontuzja|Zranenie|Контузия
+ wk| Wo.| sem.| sem.| sem.| týd.| тиж.| tyg.| týž.| седм.
+RECOVERED|GENESEN|RÉTABLI|RECUPERADO|RECUPERADO|VYLÉČEN|ОДУЖАВ|WYLECZONY|VYLIEČENÝ|ВЪЗСТАНОВЕН
+You are fit again.|Du bist wieder fit.|Tu es de nouveau en forme.|Vuelves a estar en forma.|Estás de novo em forma.|Jsi zase fit.|Ти знову у формі.|Jesteś znów w formie.|Si opäť fit.|Отново си във форма.
+League Cup|Ligapokal|Coupe de la Ligue|Copa de la Liga|Taça da Liga|Ligový pohár|Кубок ліги|Puchar Ligi|Ligový pohár|Купа на лигата
+LEAGUE CUP WINNERS!|LIGAPOKALSIEGER!|VAINQUEURS DE LA COUPE DE LA LIGUE !|¡CAMPEONES DE LA COPA DE LA LIGA!|CAMPEÕES DA TAÇA DA LIGA!|VÍTĚZ LIGOVÉHO POHÁRU!|ПЕРЕМОЖЦІ КУБКА ЛІГИ!|ZDOBYWCY PUCHARU LIGI!|VÍŤAZ LIGOVÉHO POHÁRA!|ШАМПИОНИ ЗА КУПАТА НА ЛИГАТА!
+You won the League Cup final!|Du hast das Ligapokalfinale gewonnen!|Tu as gagné la finale de la Coupe de la Ligue !|¡Ganaste la final de la Copa de la Liga!|Ganhaste a final da Taça da Liga!|Vyhrál jsi finále ligového poháru!|Ти виграв фінал Кубка ліги!|Wygrałeś finał Pucharu Ligi!|Vyhral si finále ligového pohára!|Спечели финала за Купата на лигата!
+League Cup: through!|Ligapokal: weiter!|Coupe de la Ligue : qualifié !|Copa de la Liga: ¡pasamos!|Taça da Liga: seguimos!|Ligový pohár: postupujeme!|Кубок ліги: проходимо далі!|Puchar Ligi: awans!|Ligový pohár: postupujeme!|Купа на лигата: напред!
+Knocked out of the League Cup|Aus im Ligapokal|Éliminé de la Coupe de la Ligue|Eliminados de la Copa de la Liga|Eliminados da Taça da Liga|Vyřazení z ligového poháru|Виліт з Кубка ліги|Odpadnięcie z Pucharu Ligi|Vyradení z ligového pohára|Отпадане от Купата на лигата
+League Phase|Ligaphase|Phase de ligue|Fase de liga|Fase de liga|Ligová fáze|Ліговий етап|Faza ligowa|Ligová fáza|Лигова фаза
+League phase:|Ligaphase:|Phase de ligue :|Fase de liga:|Fase de liga:|Ligová fáze:|Ліговий етап:|Faza ligowa:|Ligová fáza:|Лигова фаза:
+Round of 16 next.|Als Nächstes das Achtelfinale.|Prochain tour : huitièmes de finale.|Siguiente: octavos de final.|Próximo: oitavos de final.|Dále osmifinále.|Далі 1/8 фіналу.|Dalej 1/8 finału.|Ďalej osemfinále.|Следва осминафинал.
+Round of 16|Achtelfinale|Huitièmes de finale|Octavos de final|Oitavos de final|Osmifinále|1/8 фіналу|1/8 finału|Osemfinále|Осминафинал
+ pts| Pkt.| pts| pts| pts| b.| оч.| pkt| b.| т.
+not enough.|nicht genug.|pas assez.|no son suficientes.|não chega.|nestačí.|замало.|za mało.|nestačí.|недостатъчно.
+Super Cup|Supercup|Supercoupe|Supercopa|Supertaça|Superpohár|Суперкубок|Superpuchar|Superpohár|Суперкупа
+SUPER CUP WINNERS!|SUPERCUP-SIEGER!|VAINQUEURS DE LA SUPERCOUPE !|¡CAMPEONES DE LA SUPERCOPA!|CAMPEÕES DA SUPERTAÇA!|VÍTĚZ SUPERPOHÁRU!|ПЕРЕМОЖЦІ СУПЕРКУБКА!|ZDOBYWCY SUPERPUCHARU!|VÍŤAZ SUPERPOHÁRA!|ШАМПИОНИ ЗА СУПЕРКУПАТА!
+Super Cup lost|Supercup verloren|Supercoupe perdue|Supercopa perdida|Supertaça perdida|Superpohár prohrán|Суперкубок програно|Superpuchar przegrany|Superpohár prehraný|Загубена суперкупа
+Play-offs vs|Play-offs gegen|Barrages contre|Play-offs contra|Play-offs contra|Baráž proti|Плей-оф проти|Baraże z|Baráž proti|Бараж срещу
+ - WON| – GEWONNEN| – gagné| – ganado| – ganho| – výhra| – перемога| – wygrane| – výhra| – победа
+ - LOST| – VERLOREN| – perdu| – perdido| – perdido| – prohra| – поразка| – przegrane| – prehra| – загуба
+(pens)|(n. E.)|(t.a.b.)|(pen.)|(g.p.)|(pen.)|(пен.)|(k.)|(pen.)|(дузпи)
+Paused|Pausiert|En pause|En pausa|Em pausa|Pozastaveno|Пауза|Pauza|Pozastavené|Пауза
+Resumed|Fortgesetzt|Reprise|Reanudado|Retomado|Pokračuje se|Продовжено|Wznowiono|Pokračuje sa|Продължено
+Nations League Finals|Nations-League-Finale|Phase finale de la Ligue des nations|Fase final de la Liga de Naciones|Fase final da Liga das Nações|Finále Ligy národů|Фінал Ліги націй|Finał Ligi Narodów|Finále Ligy národov|Финали на Лигата на нациите
+Nations League|Nations League|Ligue des nations|Liga de Naciones|Liga das Nações|Liga národů|Ліга націй|Liga Narodów|Liga národov|Лига на нациите
+World Cup Qualifiers|WM-Qualifikation|Qualifications Coupe du monde|Clasificatorias del Mundial|Qualificação para o Mundial|Kvalifikace na MS|Кваліфікація ЧС|Eliminacje MŚ|Kvalifikácia na MS|Квалификации за СП
+European Championship (EURO)|Europameisterschaft (EURO)|Championnat d'Europe (EURO)|Eurocopa (EURO)|Campeonato da Europa (EURO)|Mistrovství Evropy (EURO)|Чемпіонат Європи (ЄВРО)|Mistrzostwa Europy (EURO)|Majstrovstvá Európy (EURO)|Европейско първенство (ЕВРО)
+Finalissima|Finalissima|Finalissima|Finalissima|Finalissima|Finalissima|Фіналіссіма|Finalissima|Finalissima|Финалисима
+International Friendly|Länderspiel (Freundschaft)|Match amical international|Amistoso internacional|Jogo particular internacional|Mezinárodní přátelak|Міжнародний товариський матч|Mecz towarzyski reprezentacji|Medzinárodný prípravný zápas|Международна контрола
+Friendly|Freundschaftsspiel|Amical|Amistoso|Amigável|Přátelak|Товариський матч|Towarzyski|Prípravný zápas|Контрола
+Group|Gruppe|Groupe|Grupo|Grupo|Skupina|Група|Grupa|Skupina|Група
+Qualifier|Qualifikationsspiel|Qualification|Clasificatoria|Qualificação|Kvalifikace|Кваліфікація|Eliminacje|Kvalifikácia|Квалификация
+ · Through to the knockouts| · weiter in die K.-o.-Runde| · qualifié pour les phases finales| · pasa a la fase final| · segue para o mata-mata| · postup do vyřazovací fáze| · вихід у плей-оф| · awans do fazy pucharowej| · postup do vyraďovacej fázy| · напред към елиминациите
+ · Eliminated in the group| · in der Gruppe ausgeschieden| · éliminé en poule| · eliminado en el grupo| · eliminado na fase de grupos| · vyřazení ve skupině| · виліт у групі| · odpadnięcie w grupie| · vyradenie v skupine| · отпадане в групата
+ · Out| · ausgeschieden| · éliminé| · eliminado| · eliminado| · konec| · виліт| · koniec| · koniec| · отпадане
+ · Qualified for the World Cup!| · für die WM qualifiziert!| · qualifié pour la Coupe du monde !| · ¡clasificado para el Mundial!| · apurado para o Mundial!| · postup na MS!| · кваліфікація на ЧС!| · awans na MŚ!| · postup na MS!| · класиране за СП!
+ · Failed to qualify| · Qualifikation verpasst| · non qualifié| · no se clasificó| · não se apurou| · nepostoupil| · не пройшов кваліфікацію| · brak awansu| · nepostúpil| · не се класира
+ (promoted)| (aufgestiegen)| (promu)| (ascenso)| (promovido)| (postup)| (підвищення)| (awans)| (postup)| (промоция)
+ (relegated)| (abgestiegen)| (relégué)| (descenso)| (despromovido)| (sestup)| (виліт)| (spadek)| (zostup)| (изпадане)
+winners!|Sieger!|vainqueurs !|¡campeones!|campeões!|vítězové!|переможці!|zwycięzcy!|víťazi!|шампиони!
+Locked|Gesperrt|Verrouillé|Bloqueado|Bloqueado|Zamčeno|Заблоковано|Zablokowane|Zamknuté|Заключено
+Tap a trophy for its history|Tippe auf eine Trophäe für den Verlauf|Touche un trophée pour voir son historique|Toca un trofeo para ver su historial|Toca num troféu para ver o histórico|Klepni na trofej pro historii|Торкнись трофея, щоб побачити історію|Dotknij trofeum, aby zobaczyć historię|Klepni na trofej pre históriu|Докосни трофей за история
+(details not recorded for earlier wins)|(Details früherer Siege nicht erfasst)|(détails des victoires précédentes non enregistrés)|(detalles de victorias anteriores no registrados)|(detalhes das vitórias anteriores não registados)|(podrobnosti dřívejších výher nejsou zaznamenány)|(деталі попередніх перемог не збережено)|(brak szczegółów wcześniejszych zwycięstw)|(podrobnosti skôrších výhier nie sú zaznamenané)|(няма данни за по-ранните победи)
+Final:|Finale:|Finale :|Final:|Final:|Finále:|Фінал:|Finał:|Finále:|Финал:
+ vs | gegen | contre | contra | contra | proti | проти | z | proti | срещу 
+Finish 1st in your league.|Werde Erster in deiner Liga.|Termine premier de ta ligue.|Termina primero en tu liga.|Termina em 1.º na tua liga.|Skonči první ve své lize.|Фінішуй першим у своїй лізі.|Zajmij 1. miejsce w lidze.|Skonči prvý vo svojej lige.|Финишира първи в лигата си.
+Win the domestic cup final.|Gewinne das Finale des Landespokals.|Gagne la finale de la coupe nationale.|Gana la final de la copa nacional.|Ganha a final da taça nacional.|Vyhraj finále domácího poháru.|Виграй фінал національного кубка.|Wygraj finał krajowego pucharu.|Vyhraj finále domáceho pohára.|Спечели финала за националната купа.
+Win the League Cup final (England, France, Portugal, Scotland).|Gewinne das Ligapokalfinale (England, Frankreich, Portugal, Schottland).|Gagne la finale de la Coupe de la Ligue (Angleterre, France, Portugal, Écosse).|Gana la final de la Copa de la Liga (Inglaterra, Francia, Portugal, Escocia).|Ganha a final da Taça da Liga (Inglaterra, França, Portugal, Escócia).|Vyhraj finále ligového poháru (Anglie, Francie, Portugalsko, Skotsko).|Виграй фінал Кубка ліги (Англія, Франція, Португалія, Шотландія).|Wygraj finał Pucharu Ligi (Anglia, Francja, Portugalia, Szkocja).|Vyhraj finále ligového pohára (Anglicko, Francúzsko, Portugalsko, Škótsko).|Спечели финала за Купата на лигата (Англия, Франция, Португалия, Шотландия).
+Win the league or cup as a Tier 1 club, then win the Super Cup.|Werde als Erstligist Meister oder Pokalsieger und gewinne dann den Supercup.|Gagne la ligue ou la coupe avec un club de D1, puis la Supercoupe.|Gana la liga o la copa con un club de Primera y luego la Supercopa.|Ganha a liga ou a taça num clube da 1.ª divisão e depois a Supertaça.|Vyhraj ligu nebo pohár v 1. lize a pak Superpohár.|Виграй лігу чи кубок у вищій лізі, потім Суперкубок.|Wygraj ligę lub puchar w pierwszej lidze, potem Superpuchar.|Vyhraj ligu alebo pohár v 1. lige a potom Superpohár.|Спечели лигата или купата в първа дивизия, после Суперкупата.
+Finish near the top of Tier 1 and win the Champions League.|Beende die Saison in der 1. Liga weit oben und gewinne die Champions League.|Termine en haut de la D1 et gagne la Ligue des champions.|Acaba arriba en Primera y gana la Liga de Campeones.|Acaba no topo da 1.ª divisão e ganha a Liga dos Campeões.|Skonči v 1. lize nahoře a vyhraj Ligu mistrů.|Фінішуй у топі вищої ліги та виграй Лігу чемпіонів.|Zakończ sezon w czołówce pierwszej ligi i wygraj Ligę Mistrzów.|Skonči v 1. lige navrchu a vyhraj Ligu majstrov.|Финишира в топа на първа дивизия и спечели Шампионската лига.
+Qualify for the Europa League and win the final.|Qualifiziere dich für die Europa League und gewinne das Finale.|Qualifie-toi pour la Ligue Europa et gagne la finale.|Clasifícate para la Europa League y gana la final.|Apura-te para a Liga Europa e ganha a final.|Kvalifikuj se do Evropské ligy a vyhraj finále.|Пройди кваліфікацію до Ліги Європи та виграй фінал.|Zakwalifikuj się do Ligi Europy i wygraj finał.|Kvalifikuj sa do Európskej ligy a vyhraj finále.|Класирай се за Лига Европа и спечели финала.
+Qualify for the Conference League and win the final.|Qualifiziere dich für die Conference League und gewinne das Finale.|Qualifie-toi pour la Ligue Europa Conférence et gagne la finale.|Clasifícate para la Conference League y gana la final.|Apura-te para a Liga Conferência e ganha a final.|Kvalifikuj se do Konferenční ligy a vyhraj finále.|Пройди кваліфікацію до Ліги конференцій та виграй фінал.|Zakwalifikuj się do Ligi Konferencji i wygraj finał.|Kvalifikuj sa do Konferenčnej ligy a vyhraj finále.|Класирай се за Лигата на конференциите и спечели финала.
+Reach OVR 72 for a call-up, qualify and win the World Cup.|Erreiche OVR 72 für die Nominierung, qualifiziere dich und gewinne die WM.|Atteins 72 OVR pour la sélection, qualifie-toi et gagne la Coupe du monde.|Llega a 72 OVR para la convocatoria, clasifícate y gana el Mundial.|Chega a 72 OVR para a convocatória, apura-te e ganha o Mundial.|Dosáhni OVR 72 pro nominaci, postup a vyhraj mistrovství světa.|Досягни 72 OVR для виклику, пройди кваліфікацію та виграй ЧС.|Osiągnij OVR 72, zakwalifikuj się i wygraj mistrzostwa świata.|Dosiahni OVR 72 pre nomináciu, postúp a vyhraj majstrovstvá sveta.|Достигни OVR 72 за повикване, класирай се и спечели СП.
+Win the continental championship with your national team.|Gewinne mit deiner Nationalmannschaft die Kontinentalmeisterschaft.|Gagne le championnat continental avec ton équipe nationale.|Gana el campeonato continental con tu selección.|Ganha o campeonato continental com a tua seleção.|Vyhraj s reprezentací kontinentální šampionát.|Виграй континентальний чемпіонат зі збірною.|Wygraj mistrzostwa kontynentu z reprezentacją.|Vyhraj s reprezentáciou kontinentálny šampionát.|Спечели континенталното първенство с националния отбор.
+Win the Nations League Finals with your national team.|Gewinne mit deiner Nationalmannschaft das Nations-League-Finale.|Gagne la phase finale de la Ligue des nations avec ton équipe nationale.|Gana la fase final de la Liga de Naciones con tu selección.|Ganha a fase final da Liga das Nações com a tua seleção.|Vyhraj s reprezentací finále Ligy národů.|Виграй фінал Ліги націй зі збірною.|Wygraj finał Ligi Narodów z reprezentacją.|Vyhraj s reprezentáciou finále Ligy národov.|Спечели финалите на Лигата на нациите с националния отбор.
+Win the continental title, then win the Finalissima.|Gewinne den Kontinentaltitel und dann die Finalissima.|Gagne le titre continental, puis la Finalissima.|Gana el título continental y luego la Finalissima.|Ganha o título continental e depois a Finalissima.|Vyhraj kontinentální titul a pak Finalissimu.|Виграй континентальний титул, потім Фіналіссіму.|Wygraj tytuł kontynentalny, potem Finalissimę.|Vyhraj kontinentálny titul a potom Finalissimu.|Спечели континенталната титла, после Финалисима.
+Average rating 7.5+ over a season.|Durchschnittsnote 7,5+ in einer Saison.|Note moyenne de 7,5+ sur une saison.|Nota media de 7,5+ en una temporada.|Nota média de 7,5+ numa época.|Průměrné hodnocení 7,5+ za sezónu.|Середній рейтинг 7,5+ за сезон.|Średnia ocena 7,5+ w sezonie.|Priemerné hodnotenie 7,5+ za sezónu.|Средна оценка 7,5+ за сезон.
+Tier 1, average rating 8+ and OVR 80+.|1. Liga, Durchschnittsnote 8+ und OVR 80+.|D1, note moyenne 8+ et OVR 80+.|Primera, nota media 8+ y OVR 80+.|1.ª divisão, nota média 8+ e OVR 80+.|1. liga, průměrné hodnocení 8+ a OVR 80+.|Вища ліга, середній рейтинг 8+ та OVR 80+.|Pierwsza liga, średnia ocena 8+ i OVR 80+.|1. liga, priemerné hodnotenie 8+ a OVR 80+.|Първа дивизия, средна оценка 8+ и OVR 80+.
+CAREER SLOTS|KARRIERE-PLÄTZE|EMPLACEMENTS DE CARRIÈRE|RANURAS DE CARRERA|SLOTS DE CARREIRA|POZICE KARIÉR|СЛОТИ КАР'ЄР|SLOTY KARIER|POZÍCIE KARIÉR|СЛОТОВЕ ЗА КАРИЕРИ
+Save Slot|Speicherplatz|Emplacement de sauvegarde|Ranura de guardado|Slot de gravação|Pozice uložení|Слот збереження|Slot zapisu|Pozícia uloženia|Слот за запис
+Empty Slot|Leerer Platz|Emplacement vide|Ranura vacía|Slot vazio|Prázdná pozice|Порожній слот|Pusty slot|Prázdna pozícia|Празен слот
+Start New Career in this Slot|Neue Karriere in diesem Platz starten|Commencer une nouvelle carrière ici|Empezar nueva carrera en esta ranura|Iniciar nova carreira neste slot|Začít novou kariéru v této pozici|Почати нову кар'єру в цьому слоті|Rozpocznij nową karierę w tym slocie|Začať novú kariéru v tejto pozícii|Започни нова кариера в този слот
+Load Career|Karriere laden|Charger la carrière|Cargar carrera|Carregar carreira|Načíst kariéru|Завантажити кар'єру|Wczytaj karierę|Načítať kariéru|Зареди кариерата
+Delete Save|Spielstand löschen|Supprimer la sauvegarde|Borrar partida|Apagar jogo guardado|Smazat uložení|Видалити збереження|Usuń zapis|Zmazať uloženie|Изтрий записа
+Confirm Delete?|Wirklich löschen?|Confirmer la suppression ?|¿Confirmar borrado?|Confirmar eliminação?|Potvrdit smazání?|Підтвердити видалення?|Potwierdzić usunięcie?|Potvrdiť zmazanie?|Потвърди изтриването?
+SWITCH CAREER|KARRIERE WECHSELN|CHANGER DE CARRIÈRE|CAMBIAR DE CARRERA|MUDAR DE CARREIRA|PŘEPNOUT KARIÉRU|ЗМІНИТИ КАР'ЄРУ|ZMIEŃ KARIERĘ|PREPNÚŤ KARIÉRU|СМЕНИ КАРИЕРАТА
+Switch Career|Karriere wechseln|Changer de carrière|Cambiar de carrera|Mudar de carreira|Přepnout kariéru|Змінити кар'єру|Zmień karierę|Prepnúť kariéru|Смени кариерата
+Saved|Gespeichert|Sauvegardé|Guardado|Guardado|Uloženo|Збережено|Zapisano|Uložené|Запазено
+Appearances|Einsätze|Apparitions|Partidos|Jogos|Zápasy|Матчі|Występy|Zápasy|Мачове
+Clean sheets|Zu-Null-Spiele|Clean sheets|Porterías a cero|Jogos sem sofrer|Čistá konta|Сухі матчі|Czyste konta|Čisté kontá|Мачове без гол
+TROPHY CABINET|TROPHÄENSCHRANK|SALLE DES TROPHÉES|VITRINA DE TROFEOS|SALA DE TROFÉUS|SÍŇ SLÁVY|ВІТРИНА ТРОФЕЇВ|GABLOTA Z PUCHARAMI|SIEŇ SLÁVY|ВИТРИНА С ТРОФЕИ
+League titles|Meistertitel|Titres de champion|Ligas ganadas|Títulos de liga|Ligové tituly|Титули ліги|Tytuły ligowe|Ligové tituly|Титли от лигата
+Player of Year|Spieler des Jahres|Joueur de l'année|Jugador del año|Jogador do ano|Hráč roku|Гравець року|Piłkarz roku|Hráč roka|Играч на годината
+Ballon d’Or|Ballon d’Or|Ballon d’Or|Balón de Oro|Bola de Ouro|Zlatý míč|Золотий м'яч|Złota Piłka|Zlatá lopta|Златната топка
+TIMELINE|KARRIEREVERLAUF|PARCOURS|TRAYECTORIA|PERCURSO|ČASOVÁ OSA|ХРОНОЛОГІЯ|OŚ CZASU|ČASOVÁ OS|ХРОНОЛОГИЯ
+current|aktuell|actuel|actual|atual|současnost|зараз|obecnie|súčasnosť|сега
+RECENT MATCHES|LETZTE SPIELE|MATCHS RÉCENTS|PARTIDOS RECIENTES|JOGOS RECENTES|POSLEDNÍ ZÁPASY|ОСТАННІ МАТЧІ|OSTATNIE MECZE|POSLEDNÉ ZÁPASY|ПОСЛЕДНИ МАЧОВЕ
+No matches yet.|Noch keine Spiele.|Aucun match pour l'instant.|Aún no hay partidos.|Ainda sem jogos.|Zatím žádné zápasy.|Матчів ще немає.|Brak meczów.|Zatiaľ žiadne zápasy.|Още няма мачове.
+Each upgrade costs 1 XP plus money. Earn XP from match ratings.|Jedes Upgrade kostet 1 XP plus Geld. XP gibt es für Spielernoten.|Chaque amélioration coûte 1 XP plus de l'argent. Gagne de l'XP avec tes notes.|Cada mejora cuesta 1 XP más dinero. Gana XP con tus notas.|Cada melhoria custa 1 XP mais dinheiro. Ganha XP com as tuas notas.|Každé vylepšení stojí 1 XP a peníze. XP získáš za hodnocení zápasů.|Кожне покращення коштує 1 XP та гроші. XP дають за рейтинг матчів.|Każde ulepszenie kosztuje 1 XP i pieniądze. XP zdobywasz za oceny meczów.|Každé vylepšenie stojí 1 XP a peniaze. XP získaš za hodnotenie zápasov.|Всяко подобрение струва 1 XP и пари. XP се печели от оценките.
+BACK|ZURÜCK|RETOUR|VOLVER|VOLTAR|ZPĚT|НАЗАД|WSTECZ|SPÄŤ|НАЗАД
+SPONSORS|SPONSOREN|SPONSORS|PATROCINADORES|PATROCINADORES|SPONZOŘI|СПОНСОРИ|SPONSORZY|SPONZORI|СПОНСОРИ
+OFFERS (max 3 deals)|ANGEBOTE (max. 3 Verträge)|OFFRES (3 contrats max)|OFERTAS (máx. 3 acuerdos)|OFERTAS (máx. 3 acordos)|NABÍDKY (max. 3 smlouvy)|ПРОПОЗИЦІЇ (макс. 3 угоди)|OFERTY (maks. 3 umowy)|PONUKY (max. 3 zmluvy)|ОФЕРТИ (макс. 3 договора)
+No active deals.|Keine aktiven Verträge.|Aucun contrat actif.|Sin acuerdos activos.|Sem acordos ativos.|Žádné aktivní smlouvy.|Немає активних угод.|Brak aktywnych umów.|Žiadne aktívne zmluvy.|Няма активни договори.
+No offers right now.|Derzeit keine Angebote.|Aucune offre pour l'instant.|No hay ofertas ahora.|Sem ofertas por agora.|Teď žádné nabídky.|Наразі пропозицій немає.|Brak ofert w tej chwili.|Teraz žiadne ponuky.|В момента няма оферти.
+Next brand:|Nächste Marke:|Prochaine marque :|Próxima marca:|Próxima marca:|Další značka:|Наступний бренд:|Następna marka:|Ďalšia značka:|Следваща марка:
+or better|oder besser|ou mieux|o mejor|ou melhor|nebo lepší|або вище|lub wyżej|alebo lepšia|или по-високо
+ per | pro | par | por | por | za | за | za | za | за 
+clean sheet|Zu-Null-Spiel|clean sheet|portería a cero|jogo sem sofrer|čisté konto|сухий матч|czyste konto|čisté konto|мач без гол
+assist|Vorlage|passe décisive|asistencia|assistência|asistenci|асист|asystę|asistenciu|асистенция
+goal|Tor|but|gol|golo|gól|гол|gola|gól|гол
+or Man of the Match|oder Man of the Match|ou homme du match|o jugador del partido|ou melhor em campo|nebo hráč zápasu|або гравець матчу|lub zawodnik meczu|alebo hráč zápasu|или играч на мача
+or MotM|oder MotM|ou HdM|o MJP|ou MVP|nebo HZ|або ГМ|lub ZM|alebo HZ|или ИМ
+SHOP|SHOP|BOUTIQUE|TIENDA|LOJA|OBCHOD|МАГАЗИН|SKLEP|OBCHOD|МАГАЗИН
+Personal Trainer + Recovery Gear|Personal Trainer + Regenerationsausrüstung|Coach personnel + équipement de récupération|Entrenador personal + equipo de recuperación|Treinador pessoal + equipamento de recuperação|Osobní trenér + regenerační vybavení|Персональний тренер + обладнання для відновлення|Trener personalny + sprzęt regeneracyjny|Osobný tréner + regeneračné vybavenie|Личен треньор + възстановяване
+Lifestyle upgrade|Lifestyle-Upgrade|Amélioration du style de vie|Mejora de estilo de vida|Melhoria de estilo de vida|Vylepšení životního stylu|Покращення способу життя|Ulepszenie stylu życia|Vylepšenie životného štýlu|Подобрение на начина на живот
++15% XP per level|+15 % XP pro Stufe|+15 % d'XP par niveau|+15 % de XP por nivel|+15 % de XP por nível|+15 % XP za úroveň|+15 % XP за рівень|+15 % XP na poziom|+15 % XP za úroveň|+15 % XP на ниво
++25% Fame per level|+25 % Ruhm pro Stufe|+25 % de célébrité par niveau|+25 % de fama por nivel|+25 % de fama por nível|+25 % slávy za úroveň|+25 % слави за рівень|+25 % sławy na poziom|+25 % slávy za úroveň|+25 % слава на ниво
+MAX|MAX|MAX|MÁX.|MÁX.|MAX|МАКС.|MAKS.|MAX|МАКС.
+Lv|Stufe|Niv.|Nv.|Nv.|Úr.|Рів.|Poz.|Úr.|Ниво
+SETTINGS|EINSTELLUNGEN|PARAMÈTRES|AJUSTES|DEFINIÇÕES|NASTAVENÍ|НАЛАШТУВАННЯ|USTAWIENIA|NASTAVENIA|НАСТРОЙКИ
+EXPORT SAVE|SPIELSTAND EXPORTIEREN|EXPORTER LA SAUVEGARDE|EXPORTAR PARTIDA|EXPORTAR JOGO GUARDADO|EXPORTOVAT ULOŽENÍ|ЕКСПОРТ ЗБЕРЕЖЕННЯ|EKSPORTUJ ZAPIS|EXPORTOVAŤ ULOŽENIE|ЕКСПОРТ НА ЗАПИСА
+IMPORT SAVE|SPIELSTAND IMPORTIEREN|IMPORTER LA SAUVEGARDE|IMPORTAR PARTIDA|IMPORTAR JOGO GUARDADO|IMPORTOVAT ULOŽENÍ|ІМПОРТ ЗБЕРЕЖЕННЯ|IMPORTUJ ZAPIS|IMPORTOVAŤ ULOŽENIE|ИМПОРТ НА ЗАПИСА
+CLOSE|SCHLIESSEN|FERMER|CERRAR|FECHAR|ZAVŘÍT|ЗАКРИТИ|ZAMKNIJ|ZAVRIEŤ|ЗАТВОРИ
+LANGUAGE|SPRACHE|LANGUE|IDIOMA|IDIOMA|JAZYK|МОВА|JĘZYK|JAZYK|ЕЗИК
+A saved career exists. Starting a new career will overwrite it. Continue?|Es existiert ein Spielstand. Eine neue Karriere überschreibt ihn. Fortfahren?|Une sauvegarde existe. Une nouvelle carrière l'écrasera. Continuer ?|Hay una partida guardada. Una nueva carrera la sobrescribirá. ¿Continuar?|Existe um jogo guardado. Uma nova carreira vai substituí-lo. Continuar?|Existuje uložená kariéra. Nová kariéra ji přepíše. Pokračovat?|Існує збережена кар'єра. Нова кар'єра її перезапише. Продовжити?|Istnieje zapisana kariera. Nowa kariera ją nadpisze. Kontynuować?|Existuje uložená kariéra. Nová kariéra ju prepíše. Pokračovať?|Има запазена кариера. Новата ще я презапише. Продължаване?
+Delete your saved career? This cannot be undone.|Gespeicherte Karriere löschen? Das kann nicht rückgängig gemacht werden.|Supprimer ta carrière sauvegardée ? C'est irréversible.|¿Borrar tu carrera guardada? No se puede deshacer.|Apagar a tua carreira guardada? Não pode ser desfeito.|Smazat uloženou kariéru? Nelze vrátit zpět.|Видалити збережену кар'єру? Це незворотно.|Usunąć zapisaną karierę? Tego nie można cofnąć.|Zmazať uloženú kariéru? Nedá sa vrátiť späť.|Изтриване на запазената кариера? Това е необратимо.
+Invalid save data.|Ungültige Speicherdaten.|Données de sauvegarde invalides.|Datos de guardado no válidos.|Dados de gravação inválidos.|Neplatná data uložení.|Недійсні дані збереження.|Nieprawidłowe dane zapisu.|Neplatné údaje uloženia.|Невалидни данни за запис.
+Save copied to clipboard.|Spielstand in die Zwischenablage kopiert.|Sauvegarde copiée dans le presse-papiers.|Partida copiada al portapapeles.|Jogo guardado copiado para a área de transferência.|Uložení zkopírováno do schránky.|Збереження скопійовано в буфер.|Zapis skopiowany do schowka.|Uloženie skopírované do schránky.|Записът е копиран.
+No career to export yet.|Noch keine Karriere zum Exportieren.|Aucune carrière à exporter.|Aún no hay carrera que exportar.|Ainda não há carreira para exportar.|Zatím není co exportovat.|Кар'єри для експорту ще немає.|Brak kariery do eksportu.|Zatiaľ nie je čo exportovať.|Още няма кариера за експорт.
+Copy your save:|Kopiere deinen Spielstand:|Copie ta sauvegarde :|Copia tu partida:|Copia o teu jogo guardado:|Zkopíruj své uložení:|Скопіюй збереження:|Skopiuj zapis:|Skopíruj uloženie:|Копирай записа:
+Paste save data:|Spielstand einfügen:|Colle la sauvegarde :|Pega los datos de guardado:|Cola os dados de gravação:|Vlož data uložení:|Встав дані збереження:|Wklej dane zapisu:|Vlož údaje uloženia:|Постави данните:
+England|England|Angleterre|Inglaterra|Inglaterra|Anglie|Англія|Anglia|Anglicko|Англия
+Spain|Spanien|Espagne|España|Espanha|Španělsko|Іспанія|Hiszpania|Španielsko|Испания
+Italy|Italien|Italie|Italia|Itália|Itálie|Італія|Włochy|Taliansko|Италия
+Germany|Deutschland|Allemagne|Alemania|Alemanha|Německo|Німеччина|Niemcy|Nemecko|Германия
+France|Frankreich|France|Francia|França|Francie|Франція|Francja|Francúzsko|Франция
+Netherlands|Niederlande|Pays-Bas|Países Bajos|Países Baixos|Nizozemsko|Нідерланди|Holandia|Holandsko|Нидерландия
+Portugal|Portugal|Portugal|Portugal|Portugal|Portugalsko|Португалія|Portugalia|Portugalsko|Португалия
+Belgium|Belgien|Belgique|Bélgica|Bélgica|Belgie|Бельгія|Belgia|Belgicko|Белгия
+Turkey|Türkei|Turquie|Turquía|Turquia|Turecko|Туреччина|Turcja|Turecko|Турция
+Czech Republic|Tschechien|Tchéquie|Chequia|Chéquia|Česko|Чехія|Czechy|Česko|Чехия
+Czechia|Tschechien|Tchéquie|Chequia|Chéquia|Česko|Чехія|Czechy|Česko|Чехия
+Scotland|Schottland|Écosse|Escocia|Escócia|Skotsko|Шотландія|Szkocja|Škótsko|Шотландия
+Austria|Österreich|Autriche|Austria|Áustria|Rakousko|Австрія|Austria|Rakúsko|Австрия
+Switzerland|Schweiz|Suisse|Suiza|Suíça|Švýcarsko|Швейцарія|Szwajcaria|Švajčiarsko|Швейцария
+Greece|Griechenland|Grèce|Grecia|Grécia|Řecko|Греція|Grecja|Grécko|Гърция
+Denmark|Dänemark|Danemark|Dinamarca|Dinamarca|Dánsko|Данія|Dania|Dánsko|Дания
+Brazil|Brasilien|Brésil|Brasil|Brasil|Brazílie|Бразилія|Brazylia|Brazília|Бразилия
+Argentina|Argentinien|Argentine|Argentina|Argentina|Argentina|Аргентина|Argentyna|Argentína|Аржентина
+Nigeria|Nigeria|Nigeria|Nigeria|Nigéria|Nigérie|Нігерія|Nigeria|Nigéria|Нигерия
+Japan|Japan|Japon|Japón|Japão|Japonsko|Японія|Japonia|Japonsko|Япония
+Croatia|Kroatien|Croatie|Croacia|Croácia|Chorvatsko|Хорватія|Chorwacja|Chorvátsko|Хърватия`.split('\n').forEach(l=>{if(!l)return;const a=l.split('|');D[a[0]]=a.slice(1)});
+RX=new RegExp(Object.keys(D).sort((a,b)=>b.length-a.length).map(k=>k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|'),'g');
+const tl=s=>LANG=='en'||typeof s!='string'?s:s.replace(RX,m=>(D[m]&&D[m][LI[LANG]])||m);
+function trNode(n){const v=n.nodeValue,r=REC.get(n);if(r&&r.t===v)return;const t=tl(v);REC.set(n,{o:v,t});if(t!==v)n.nodeValue=t}
+function trAll(root,re){const w=document.createTreeWalker(root,4,{acceptNode:n=>/^(SCRIPT|STYLE)$/.test(n.parentNode.nodeName)?2:1});let n;while(n=w.nextNode()){const r=REC.get(n);if(re&&r){const t=tl(r.o);r.t=t;if(n.nodeValue!==t)n.nodeValue=t}else trNode(n)}}
+function setLang(l){LANG=l;try{localStorage.setItem('pr_lang',l)}catch(e){}document.documentElement.lang=l;const f=LG.find(x=>x[0]==l);$('#lg').textContent=f[1]+' '+l.toUpperCase();trAll(document.body,true)}
+function lgGrid(){$('#lgrid').innerHTML=LG.map(l=>`<button class="${l[0]==LANG?'':'s'}" onclick="setLang('${l[0]}');$('#lm').classList.add('hidden')">${l[1]} ${l[2]}</button>`).join('')}
+function initLang(){let l=null;try{l=localStorage.getItem('pr_lang')}catch(e){}if(!LG.some(x=>x[0]==l)){const n=(navigator.language||'en').slice(0,2).toLowerCase();l=LG.some(x=>x[0]==n)?n:'en'}
+const _al=window.alert.bind(window),_cf=window.confirm.bind(window),_pr=window.prompt.bind(window);window.alert=m=>_al(tl(m));window.confirm=m=>_cf(tl(m));window.prompt=(m,d)=>_pr(tl(m),d);
+$('#lg').onclick=()=>{lgGrid();$('#lm').classList.remove('hidden')};setLang(l);
+new MutationObserver(ms=>{for(const m of ms){if(m.type=='characterData')trNode(m.target);else m.addedNodes.forEach(x=>{if(x.nodeType==3)trNode(x);else if(x.nodeType==1)trAll(x)})}}).observe(document.body,{childList:true,subtree:true,characterData:true})}
+/* ---------- create ---------- */
+let sp='FWD';
+$('#nt').innerHTML=NAT.map(n=>`<option value="${n}">${n}</option>`).join('');
+$('#cc').innerHTML=CT.map((c,i)=>`<option value="${i}">${c[0]} ${c[1]}</option>`).join('');
+$('#nt').onchange=()=>{const i=CT.findIndex(c=>$('#nt').value.includes(c[1].slice(0,5)));if(i>=0)$('#cc').value=i};
+$('#ps').innerHTML=Object.keys(POSN).map(k=>`<button data-k="${k}">${POSN[k][0]}</button>`).join('');
+function selPos(k){sp=k;[...$('#ps').children].forEach(b=>b.classList.toggle('on',b.dataset.k==k));$('#pd').textContent=POSN[k][1]+' Key stats: '+POS[k].join(', ')+'.'}
+$('#ps').onclick=e=>{if(e.target.dataset.k)selPos(e.target.dataset.k)};selPos('FWD');
+$('#go').onclick=()=>{if(HAS&&!confirm('A saved career exists. Starting a new career will overwrite it. Continue?'))return;const cc=+$('#cc').value,tt=+$('#tt').value,mk=mkClub(cc,tt,-4);P={name:$('#nm').value.trim()||'Rookie',nat:$('#nt').value,pos:sp,age:17,season:1,money:0,xp:2,g:0,a:0,rts:[],...NEWF(),st:Object.fromEntries(POS[sp].map(k=>[k,tt==3?60:55])),club:mk};mig0();L=mkLeague(mkPyr(cc,mk));AS=NS;try{localStorage.setItem('pr_active',AS)}catch(e){}hub()};
+try{const s=JSON.parse(localStorage.getItem('pr1'));if(0&&s&&s.P){HAS=1;const o=Math.round(Object.values(s.P.st).reduce((a,b)=>a+b,0)/3);$('#ct').textContent='▶ CONTINUE: '+s.P.name+' · '+s.P.pos+' · OVR '+o+' · '+s.P.club.n;$('#ct').classList.remove('hidden');$('#ct').onclick=()=>{({P,L}=s);mig();hub()}}}catch(e){}
+function newCareer(){if(confirm('Delete this career and start over?')){try{localStorage.removeItem('pr1')}catch(e){}location.reload()}}
+
+/* ---------- hub / training / table ---------- */
+function bars(){return Object.entries(P.st).map(([k,v])=>`<div class="row"><span>${k}</span><b>${v}</b></div><div class="bar"><i style="width:${v}%"></i></div>`).join('')}
+function hub(){if(P.ev&&P.ev.length){const e=P.ev.shift();return news(e[0],e[1],hub)}if(!P.nt&&ovr()>=72){P.nt=1;L.iv=mkEv();return news('📰 NATIONAL TEAM CALL-UP!','Your form has earned a call-up. You now represent '+P.nat+'. Qualifiers come during the season and the World Cup every 4th season.',hub)}if(L.round==L.sched.length>>1&&!L.mw){L.mw=1;return winScreen()}save();show('hub');const F=fix(),o=F.o;
+$('#hub').innerHTML=`<div class="card"><div class="row"><div><h2>${P.name}${P.cap?' ©':''}${P.ncap?' ©N':''}</h2>${P.nat}<br>${POSN[P.pos][0]} · Age ${P.age}</div><div style="text-align:center"><div class="px" style="font-size:24px;color:var(--ac)">${ovr()}</div><small>OVR</small></div></div>
+<p style="margin:10px 0 2px">🏟 ${P.club.n}, ${TN[P.club.tier]}</p><p style="margin:0">Season ${P.season} · 💰 £${P.money.toLocaleString()} · ⭐ ${P.xp} XP</p><p style="margin:6px 0 0"><small>Career: ${P.g} goals, ${P.a} assists</small><br><small>${CT[P.club.c][0]} ${CT[P.club.c][1]} · ${stars(P.club.str)} · Stadium ${std(P.club.str).toLocaleString()} · Table ${sorted().indexOf(L.t[0])+1}/${L.t.length} · Wage £${wage()}/wk</small></p></div>
+<div class="card">${bars()}</div>
+<div class="card"><div class="row"><span>Contract</span><b>${P.ct} yr left · £${wage().toLocaleString()}/wk</b></div><div class="row"><span>Squad role</span><b>${P.role}</b></div>${P.inj>0?`<div class="row"><span>Injury</span><b>${P.injn} · ${Math.ceil(P.inj)} wk</b></div>`:''}<div class="bar"><i style="width:${Math.round(P.trust)}%"></i></div><small>Manager trust ${Math.round(P.trust)}% · Fame ${P.fame} · Energy ${Math.round(P.en)}% · Mood ${P.mood}%</small><div class="ctl"><button class="s" onclick="sponScr()">SPONSORS &amp; SHOP</button><button class="s" onclick="reqT()">REQUEST TRANSFER</button></div><div class="ctl"><button class="s" onclick="shopScr()">LUXURY SHOP &amp; STAFF</button><button class="s" onclick="save();slotsScr()">SWITCH CAREER</button></div></div>
+<p style="margin:0 0 4px">${F.lb}: <b>${o.n}</b> <small>(${F.ty=='int'?'Key Starter':P.role})</small></p>
+<button class="main" onclick="playMatch()">${P.inj>0?'SKIP MATCH (INJURED)</button><button class="hidden">':''}▶ PLAY MATCH</button><div class="ctl"><button class="s" onclick="trainScr()">🏋 TRAINING</button><button class="s" onclick="tableScr()">📊 LEAGUE TABLE</button><button class="s" onclick="careerScr()">🏆 CAREER</button></div>`}
+function trainScr(){show('train');$('#train').innerHTML=`<div class="card"><h2>TRAINING</h2><p>⭐ ${P.xp} XP · 💰 £${P.money.toLocaleString()}</p>`+Object.entries(P.st).map(([k,v])=>{const c=Math.round(v*v/10);return `<div class="row" style="margin:8px 0"><div style="flex:1"><div class="row"><span>${k}</span><b>${v}</b></div><div class="bar"><i style="width:${v}%"></i></div></div><button style="width:104px" ${P.xp<1||P.money<c||v>=99?'disabled':''} onclick="tr('${k}')">+1<br>£${c}</button></div>`}).join('')+`<p><small>Each upgrade costs 1 XP plus money. Earn XP from match ratings.</small></p></div><button class="s" onclick="hub()">← BACK</button>`}
+function tr(k){const c=Math.round(P.st[k]**2/10);if(P.xp<1||P.money<c)return;P.xp--;P.money-=c;P.st[k]++;trustUpd(2);save();trainScr()}
+function tableScr(){show('table');$('#table').innerHTML=`<div class="card"><h2>${TN[P.club.tier]}</h2><table><tr><th>#</th><th>Club</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GD</th><th>Pts</th></tr>`+sorted().map((t,i)=>`<tr class="${t===L.t[0]?'me':''}"><td>${i+1}</td><td>${t.n}</td><td>${t.P}</td><td>${t.W}</td><td>${t.D}</td><td>${t.L}</td><td>${t.GF-t.GA}</td><td>${t.Pts}</td></tr>`).join('')+`</table></div><button class="s" onclick="hub()">← BACK</button>`}
+
+/* ---------- match ---------- */
+const say=m=>{const p=document.createElement('p');p.textContent=G.m+"' "+m;$('#tick').prepend(p)};
+function upd(){$('#sc').textContent=G.me+' - '+G.op;$('#ml').textContent=G.T.n+' v '+G.o.n+(G.F.ty!='lg'?' · '+G.F.lb:'');$('#mb').style.width=G.m/.9+'%'}
+function playMatch(){if(P.inj>0)return skipWeek();const F=fix();if(((P.cap&&F.ty!='lg')||(P.ncap&&F.ty=='int'))&&!window._tt)return talk();window._tt=0;const rl=F.ty=='int'?'Key Starter':P.role,st=rl=='Impact Sub'?ri(60,70):1,res=rl=='Reserve Squad'&&F.ty!='int',mm=new Set(),n=rl=='Key Starter'?ri(3,5):ri(1,2);while(mm.size<n)mm.add(ri(Math.max(8,st+2),86));
+G={m:0,me:0,op:0,rt:6,pg:0,pa:0,F,o:F.o,T:F.t||P.club,mm:[...mm],st,res,rl,mor:window._mor||0};window._mor=0;show('match');$('#tick').innerHTML='';$('#res').innerHTML='';$('#mom').classList.add('hidden');$('#match').classList.remove('mm');
+PZ=false;$('#pz').textContent='⏸️';sfx('whistle');say(G.res?'Reserve match: '+G.T.n+' B v '+G.o.n+' U21':'Kick-off! '+G.T.n+' v '+G.o.n);upd();if(G.rl=='Impact Sub'){say('You start on the bench...');for(let i=1;i<G.st;i++)step();say('You come on as a substitute!')}tm=setInterval(step,80)}
+function step(){if(PZ)return;G.m++;const my=G.T.str*.85+ovr()*.15+(G.mor||0),op=G.o.str;
+if(R()<cl(.012*(1+(my-op)/50),.004,.03)){G.me++;sfx('cheer');fx('goal');say('⚽ GOAL for '+G.T.n+'!')}
+else if(R()<cl(.012*(1+(op-my)/50),.004,.03)){G.op++;sfx('miss');fx('bad');say('⚽ '+G.o.n+' score.')}
+else if(R()<.1)say(pick(NEU));
+if(G.m==45){sfx('whistle');say('— Half-time —')}upd();
+if(G.m>=90){clearInterval(tm);return end()}
+if(G.mm.includes(G.m)){clearInterval(tm);startMoment()}}
+const cv=$('#cv'),cx=cv.getContext('2d');
+function startMoment(){const tp=pick(MOM[P.pos]),s=P.st[tp.s],dif=cl(1-(G.o.str-P.club.str)/150,.7,1.2);
+M={tp,s,t0:performance.now(),done:0,last:0,res:null,dir:ri(0,2),T:1+s/80,ch:null,c:.25+R()*.5,w:cl((12+(s-40)*.45)/100*dif,.08,.5),o:ri(0,2),iv:(450+s*6)/1000};
+$('#mt').textContent=tp.ti+' ('+tp.s+' '+s+')';$('#md').textContent=HINT[tp.t]+(matchMedia('(hover:hover)').matches?' [Keys: ← ↑ → or Space]':'');$('#ctl').innerHTML=tp.t=='time'?`<button data-l="1">${/tackle/i.test(tp.ti)?'TACKLE!':/intercept/i.test(tp.ti)?'INTERCEPT!':/head|cross|corner/i.test(tp.ti)?'HEAD IT!':/pass|distrib/i.test(tp.ti)?'PASS!':'SHOOT!'}</button>`:(tp.t=='dive'?['◀ DIVE','▲ HOLD','DIVE ▶']:['◀ LEFT','▲ MID','RIGHT ▶']).map((x,i)=>`<button data-l="${i}">${x}</button>`).join('');$('#mom').classList.remove('hidden');$('#match').classList.add('mm');say('⏸ KEY MOMENT: '+tp.ti);raf=requestAnimationFrame(loop)}
+function fin(r){sfx('kick');M.done=1;M.res=r;M.ft=(performance.now()-M.t0)/1000;setTimeout(()=>endMoment(r),1000)}
+cv.addEventListener('pointerdown',e=>{const b=cv.getBoundingClientRect(),x=(e.clientX-b.left)/b.width*320;act(x<107?0:x<213?1:2)});
+$('#ctl').addEventListener('pointerdown',e=>{const l=e.target.dataset.l;if(l!=null)act(+l)});
+function act(l){if(!M||M.done||PZ)return;const t=(performance.now()-M.t0)/1000;
+if(M.tp.t=='dive'){if(M.ch==null)M.ch=l}
+else if(M.tp.t=='time'){const d=Math.abs(.5+.5*Math.sin(t*3.4)-M.c);fin(d<M.w/6?2:d<M.w/2?1:0)}
+else fin(l==M.o?2:0)}
+function loop(now){if(!M)return;if(PZ){M.t0+=now-(M.lp||now);M.lp=now;raf=requestAnimationFrame(loop);return}M.lp=0;const t=(now-M.t0)/1000,c=cx,tp=M.tp;
+c.fillStyle='#1c7a3a';c.fillRect(0,0,320,200);c.fillStyle='#ffffff18';for(let i=0;i<8;i+=2)c.fillRect(i*40,0,40,200);c.textAlign='center';
+if(tp.t=='dive'){const p=Math.min(t/M.T,1),tx=100+60*M.dir;
+c.strokeStyle='#fff';c.lineWidth=4;c.strokeRect(50,20,220,70);
+c.fillStyle='#ffd23f';c.fillRect((M.ch==null?160:100+60*M.ch)-12,48,24,36);
+c.fillStyle='#fff';c.beginPath();c.arc(160+(tx-160)*p**3,185-125*p,6+4*(1-p),0,7);c.fill();
+if(!M.done&&p>=1)fin(M.ch==null?0:M.ch==M.dir?(R()<.6+M.s/250?2:0):(R()<.08?1:0))}
+else if(tp.t=='time'){const tt=M.done?M.ft:t,m=.5+.5*Math.sin(tt*3.4);
+c.fillStyle='#06200f';c.fillRect(20,130,280,26);c.fillStyle='#3ddc84';c.fillRect(20+280*(M.c-M.w/2),130,280*M.w,26);
+c.fillStyle='#ffd23f';c.fillRect(20+280*(M.c-M.w/6),130,280*M.w/3,26);c.fillStyle='#fff';c.fillRect(17+280*m,122,6,42);
+c.font='48px serif';c.fillText('⚽',160,90);if(!M.done&&t>6)fin(0)}
+else{if(!M.done&&t-M.last>M.iv){M.o=(M.o+ri(1,2))%3;M.last=t}
+[70,160,250].forEach((x,i)=>{c.fillStyle='#4aa3ff';c.fillRect(x-11,35,22,30);
+if(i==M.o){c.strokeStyle='#3ddc84';c.lineWidth=4;c.strokeRect(x-22,25,44,50)}else{c.fillStyle='#ff5252';c.fillRect(x-11,88,22,30)}});
+c.fillStyle='#fff';c.fillRect(154,165,12,12);if(!M.done&&t>6)fin(0)}
+if(M.done){c.fillStyle='#000b';c.fillRect(0,80,320,40);c.fillStyle=['#ff5252','#ffd23f','#3ddc84'][M.res];c.font='bold 22px monospace';c.fillText(tl(['MISS!','GOOD','PERFECT!'][M.res]),160,108)}
+raf=requestAnimationFrame(loop)}
+function endMoment(r){const tp=M.tp;M=null;$('#mom').classList.add('hidden');$('#match').classList.remove('mm');G.rt+=[-.5,.3,.8][r];
+if(tp.k=='a'){if(r==2||(r==1&&R()<.5)){G.me++;if(tp.g){G.pg++;G.rt+=.8}if(tp.a){G.pa++;G.rt+=.6}sfx('swoosh');sfx('cheer');fx('goal');say('⚽ GOAL! '+(tp.g?P.name+' scores!':tp.a?P.name+' sets it up!':'Great play from '+P.name+'!'))}else say('Chance missed. '+(r?'Just wide!':'Nothing doing.'))}
+else{const c=r==0?R()<.65:r==1&&R()<.15;if(c){G.op++;sfx('miss');fx('bad');say('😬 Mistake costs a goal. '+G.o.n+' score.')}else{if(r==2){fx('save');sfx('cheer')}say('✅ '+P.name+' deals with it.')}}
+upd();if(!PZ)tm=setInterval(step,80)}
+function end(){sfx('whistle');const w=G.me>G.op,l=G.me<G.op;let rt=G.rt+(w?.3:l?-.2:0)-Math.max(0,45-P.en)/30+((P.mood||50)-50)/80;if(G.op==0&&(P.pos=='GK'||P.pos=='DEF'))rt+=.4;
+rt=Math.round(cl(rt,3,10)*10)/10;G.rt=rt;const rm=G.rl=='Key Starter'?1:G.rl=='Impact Sub'?.75:.5;G.xp=Math.max(1,Math.round((1+Math.max(0,rt-5)*1.5+(w?1:0))*rm*(1+P.up.pt*.15)));G.mo=Math.round(wage()*(.8+rt/10)*(G.res?.5:1));G.fm=Math.max(0,Math.round(((rt-5.5)*(1+(5-P.club.tier)*.6)+G.pg*2+G.pa)*rm*(1+P.up.ls*.25)));
+$('#res').innerHTML=`<div class="card"><h2>FULL TIME: ${w?'VICTORY 🎉':l?'DEFEAT':'DRAW'} ${G.me}-${G.op}</h2><div class="row"><span>Match rating</span><b style="color:var(--ac);font-size:24px">${rt.toFixed(1)}</b></div><p style="margin:8px 0 0">Goals ${G.pg} · Assists ${G.pa}<br>+${G.xp} XP · +£${G.mo.toLocaleString()} · Fame +${G.fm}${G.res?'<br><small>Reserve match: reduced rewards</small>':G.rl=='Impact Sub'?'<br><small>Substitute appearance</small>':''}</p></div><button class="main" onclick="commit()">CONTINUE</button>`}
+function commit(){P.xp+=G.xp;P.money+=G.mo;recover();if(!G.inj){P.rts.push(G.rt);P.g+=G.pg;P.a+=G.pa;P.fame+=G.fm;sponsorPay();trustUpd();injRoll()}weekly();if(post())return;
+L.sched[L.round].forEach(([a,b])=>{let x,y;if(a==0&&!G.res)[x,y]=[G.me,G.op];else if(b==0&&!G.res)[x,y]=[G.op,G.me];else{x=pois(1.3*(1+(L.t[a].str-L.t[b].str)/80));y=pois(1.3*(1+(L.t[b].str-L.t[a].str)/80))}rec(a,x,y);rec(b,y,x)});
+L.round++;L.round>=L.sched.length?seasonEnd():hub()}
+
+/* ---------- season end / transfers ---------- */
+function seasonEnd(){const pos=sorted().indexOf(L.t[0])+1,avg=P.rts.reduce((a,b)=>a+b,0)/P.rts.length,o=ovr(),t=P.club.tier,need={3:58,2:66,1:74};
+let prom=0;const prize=Math.round([0,50000,20000,8000,3000][t]*(L.t.length+1-pos)/L.t.length);P.money+=prize;if(pos==1){P.tr.lg++;addT('lg',TN[t]+': '+L.t[0].Pts+' pts','lg')}P.hist.push({s:P.season,c:P.club.n,t:t,p:pos});const aw=[];if(t==1&&avg>=8&&o>=80){P.tr.bd++;addT('bd','Average rating '+avg.toFixed(1)+' · OVR '+o,'lg');aw.push('🏅 BALLON D’OR!')}else if(avg>=7.5){P.tr.poty++;addT('poty','Average rating '+avg.toFixed(1),'lg');aw.push('⭐ Player of the Year!')}if(pos==1)aw.push('🏆 League champions!');
+window._py=nextPyr();prom=t>1&&window._py[t-2].some(x=>x.n==P.club.n);const rel=t<4&&window._py[t].some(x=>x.n==P.club.n);window._eu=t==1?euQ(pos):0;P.sup=t==1&&(pos==1||P.cupw)?1:0;P.cupw=0;if(window._po)aw.push(window._po);if(rel)aw.push('Relegated to the next tier');if(window._eu)aw.push('🌟 Qualified for the '+EUN[window._eu]+'!');OFFS=genOffers(avg);
+P.ct--;P.yrs++;P.sp=P.sp.filter(d=>--d.y>0);P.so=null;capChk(avg);window._rn={...window._py.flat().find(x=>x.n==P.club.n),y:ri(1,4),w:Math.round(P.cw*(avg>=6.8?1.25:avg>=6.2?1.12:1.02)),role:P.role};if(P.pre){OFFS.unshift({...P.pre,pre:1});P.pre=null}if(P.ct<=0)OFFS=OFFS.concat(genOffers(avg)).slice(0,6);aw.push(P.ct<=0?'Contract expired: extend or go free':P.ct==1?'1 year left on your contract':P.ct+' years left on your contract');
+show('season');$('#season').innerHTML=`<div class="card"><h2>SEASON ${P.season} COMPLETE</h2><p>Finished <b>#${pos}</b> in the ${TN[t]}${prom?' (promoted! 🎉)':''}<br>Average rating <b>${avg.toFixed(1)}</b> · OVR ${o}<br>Prize money £${prize.toLocaleString()}${aw.map(a=>'<br><b>'+a+'</b>').join('')}</p></div>
+<div class="card"><h2>${P.ct<=0?'FREE AGENT · NO TRANSFER FEE':'TRANSFER OFFERS · BUY-OUT'}</h2>${OFFS.length?'':'<p>No offers this year. Raise your rating and OVR.</p>'}`+OFFS.map((c,i)=>`<button onclick="join(${i})">${CT[c.c][0]} ${c.n}<br><small>${oinfo(c)} · str ${c.str}</small></button>`).join('')+`${P.ct<=1?'<button onclick="join(-2)">EXTEND CONTRACT<br><small>'+oinfo(window._rn)+'</small></button>':''}<button class="s" ${P.ct>0?'':'hidden'} onclick="join(-1)">STAY AT ${P.club.n.toUpperCase()}${prom?' (PROMOTED)':rel?' (RELEGATED)':''}</button></div>`;window._prom=prom}
+function join(i){let py=window._py,c;if(i<0)c=py.flat().find(x=>x.n==P.club.n);else{const o=OFFS[i];if(o.c==P.club.c){const ex=py.flat().find(x=>x.n==o.n);if(ex){c=ex}else{const a=py[o.tier-1];let j;do{j=ri(0,a.length-1)}while(a[j].n==P.club.n);a[j]={...o};c=a[j]}}else{py=mkPyr(o.c,o);c=o}}P.eu=i<0?window._eu||0:0;P.sup=i<0?P.sup:0;P.cc={};P.pre=null;P.club=c;{const o2=i==-2?window._rn:i>=0?OFFS[i]:null;if(o2){P.ct=o2.y;P.cw=o2.w}if(i>=0){P.role=o2.role;P.trust=P.role=='Key Starter'?60:P.role=='Impact Sub'?45:30;P.yrs=0;P.cap=0}}
+P.age++;P.season++;P.rts=[];for(const k in P.st)P.st[k]=cl(P.st[k]+(P.age<=23?+(R()<.5):P.age>=33?-ri(1,3):P.age>=31?-ri(0,2):0),30,99);
+L=mkLeague(py);hub()}/* ---------- v6: real clubs, 16-20 team leagues, realism, economy ---------- */
+const rd=f=>Math.round(f*L.sched.length),LS=c=>[20,20,20,18,18,18,18,16,20,16,16,16,16,16,16][c],EUN=['','Champions League','Europa League','Conference League'];
+const RC={'0-1':'Manchester City,Arsenal,Liverpool,Chelsea,Manchester United,Tottenham Hotspur,Newcastle United,Aston Villa,Brighton,West Ham United,Crystal Palace,Brentford,Fulham,Everton,Wolverhampton,Bournemouth,Nottingham Forest,Southampton,Ipswich Town,Burnley','0-2':'Leeds United,Leicester City,Sunderland,Sheffield United,Norwich City,Middlesbrough,West Bromwich Albion,Coventry City,Watford,Stoke City,Swansea City,Hull City,Blackburn Rovers,Sheffield Wednesday,Millwall,Preston North End,Bristol City,Queens Park Rangers,Cardiff City,Derby County','0-3':'Birmingham City,Wrexham,Huddersfield Town,Stockport County,Wycombe Wanderers,Bolton Wanderers,Reading,Peterborough United,Barnsley,Charlton Athletic,Blackpool,Rotherham United,Lincoln City,Stevenage,Wigan Athletic,Mansfield Town,Leyton Orient,Exeter City,Cambridge United,Northampton Town','1-1':'Real Madrid,Barcelona,Atlético Madrid,Athletic Club,Real Sociedad,Villarreal,Real Betis,Sevilla,Valencia,Girona,Osasuna,Celta Vigo,Getafe,Rayo Vallecano,Mallorca,Alavés,Espanyol,Las Palmas,Elche,Levante','2-1':'Inter Milan,AC Milan,Juventus,Napoli,Atalanta,Roma,Lazio,Fiorentina,Bologna,Torino,Genoa,Udinese,Cagliari,Lecce,Hellas Verona,Parma,Como,Sassuolo,Empoli,Monza','3-1':'Bayern München,Borussia Dortmund,Bayer Leverkusen,RB Leipzig,Eintracht Frankfurt,VfB Stuttgart,SC Freiburg,Borussia Mönchengladbach,VfL Wolfsburg,Werder Bremen,Union Berlin,Mainz 05,Hoffenheim,FC Augsburg,Heidenheim,1. FC Köln,Hamburger SV,FC St. Pauli','4-1':'Paris Saint-Germain,Marseille,Monaco,Lille,Lyon,Nice,Lens,Rennes,Strasbourg,Nantes,Toulouse,Reims,Montpellier,Brest,Le Havre,Auxerre,Angers,Metz','5-1':'Ajax,PSV Eindhoven,Feyenoord,AZ Alkmaar,FC Twente,FC Utrecht,Sparta Rotterdam,Go Ahead Eagles,NEC Nijmegen,SC Heerenveen,Fortuna Sittard,PEC Zwolle,FC Groningen,Heracles Almelo,RKC Waalwijk,Willem II,NAC Breda,Excelsior','6-1':'Benfica,Sporting CP,FC Porto,Braga,Vitória Guimarães,Famalicão,Estoril,Moreirense,Gil Vicente,Rio Ave,Santa Clara,Arouca,Casa Pia,Boavista,Nacional,Farense,Alverca,AVS','7-1':'Club Brugge,Anderlecht,Union Saint-Gilloise,Genk,Gent,Antwerp,Standard Liège,Cercle Brugge,Mechelen,Westerlo,OH Leuven,Sint-Truiden,Charleroi,Kortrijk,Zulte Waregem,Dender','8-1':'Galatasaray,Fenerbahçe,Beşiktaş,Trabzonspor,Başakşehir,Samsunspor,Eyüpspor,Kasımpaşa,Göztepe,Konyaspor,Alanyaspor,Antalyaspor,Kayserispor,Sivasspor,Rizespor,Gaziantep FK,Bodrum FK,Kocaelispor,Gençlerbirliği,Karagümrük','9-1':'Sparta Praha,Slavia Praha,Viktoria Plzeň,Hanák Ostrava? ','9-2':'','10-1':'Celtic,Rangers,Hearts,Aberdeen,Hibernian,Dundee United,Motherwell,Kilmarnock,St Mirren,Dundee,Ross County,Livingston,Falkirk,Partick Thistle,Raith Rovers,Ayr United','11-1':'Red Bull Salzburg,Sturm Graz,LASK,Rapid Wien,Austria Wien,Wolfsberger AC,Hartberg,Altach,Austria Klagenfurt,Blau-Weiß Linz,WSG Tirol,SV Ried,Grazer AK,Austria Lustenau,Admira Wacker,Vorwärts Steyr','12-1':'Young Boys,FC Basel,FC Zürich,Servette,Lugano,Lausanne-Sport,St. Gallen,Luzern,Grasshoppers,Sion,Thun,Winterthur,Yverdon,Aarau,Neuchâtel Xamax,Stade Lausanne-Ouchy','13-1':'Olympiacos,Panathinaikos,AEK Athens,PAOK,Aris,Volos,OFI Crete,Atromitos,Panaitolikos,Asteras Tripolis,Lamia,Levadiakos,PAS Giannina,Panserraikos,Kifisia,AEL Larissa','14-1':'FC København,FC Midtjylland,Brøndby,AGF,FC Nordsjælland,Silkeborg,Viborg,Randers,Odense BK,Sønderjyske,Aalborg BK,Lyngby,Vejle,Hvidovre,Fredericia,Horsens'};
+RC['9-1']='Sparta Praha,Slavia Praha,Viktoria Plzeň,Baník Ostrava,Slovan Liberec,Sigma Olomouc,Mladá Boleslav,Bohemians 1905,Hradec Králové,Jablonec,Teplice,Slovácko,Zlín,Karviná,Pardubice,České Budějovice';
+RC['9-2']='Zbrojovka Brno,Dukla Praha,Vysočina Jihlava,Sokolov,Táborsko,Příbram,Opava,Varnsdorf,Žižkov,Prostějov,Vlašim,Chrudim,Líšeň,Chomutov,Třinec,Ostrava B';
+RC['9-3']='Čáslav,Slavoj Vyšehrad,Admira Praha,Převýšov,Rakovník,Trutnov,Hlavice,Louny,Domažlice,Šardice,Uničov,Kroměříž,Frýdek-Místek,Vítkovice,Kozlovice,Vlčice';
+RC['9-4']='Tatran Sedlčany,Hlinsko,Polná,Vyškov,Hodonín,Stráň,Blansko,Rosice,Žďár nad Sázavou,Velké Meziříčí,Třeboň,Aritma Praha,Hanusovice,Hostouň,Lanzhot,Stará Boleslav';
+const rn=(c,T,u)=>{const p=(RC[c+'-'+T]||'').split(',').filter(k=>k&&!(u&&u.has(k)));return p.length?pick(p):cn(c)};
+const euSl=c=>{const p=CT[c][2];return[p>=8.5?4:p>=6.5?3:2,p>=6.5?2:1,1]},euQ=pos=>{const[a,b,d]=euSl(P.club.c);return pos<=a?1:pos<=a+b?2:pos<=a+b+d?3:0};
+function mkPyr(c,me){const u=new Set([me.n]),n=LS(c);return[1,2,3,4].map(T=>{const a=T==me.tier?[me]:[],p=(RC[c+'-'+T]||'').split(',').filter(k=>k&&k!=me.n);p.forEach((k,i)=>{if(a.length<n){u.add(k);a.push({n:k,c,tier:T,str:Math.round(base(T,c)+6-i*12/n+ri(-2,2))})}});while(a.length<n){const k=mkClub(c,T);k.n=cn(c);if(u.has(k.n))continue;u.add(k.n);a.push(k)}return a})}
+function nextPyr(){const T=P.club.tier-1,n=L.t.length,py=L.py.map(a=>a.map(c=>({...c}))),
+rk=py.map((a,i)=>i==T?sorted().map(t=>a.find(c=>c.n==t.n)):a.map(c=>[c,c.str+ri(-9,9)]).sort((x,y)=>y[1]-x[1]).map(x=>x[0]));window._po=null;
+const g=(x,y)=>[pois(1.3*(1+(x-y)/80)),pois(1.3*(1+(y-x)/80))],sw=[0,1,2].map(b=>{const lo=rk[b+1][2],hi=rk[b][n-3];
+if(lo.n==P.club.n||hi.n==P.club.n){const mine=lo.n==P.club.n?lo:hi,oth=mine==lo?hi:lo,a=Math.round(mine.str*.85+ovr()*.15),l1=g(a,oth.str),l2=g(a,oth.str);let m=l1[0]+l2[0],o=l1[1]+l2[1],pn='';if(m==o){pn=' (pens)';if(R()<.5)m++;else o++}
+window._po='Play-offs vs '+oth.n+': '+l1[0]+'-'+l1[1]+', '+l2[0]+'-'+l2[1]+pn+(m>o?' - WON':' - LOST');return mine==lo?m>o:m<=o}
+return R()<.4+(lo.str-hi.str)/100}),res=py.map(()=>[]);
+rk.forEach((a,i)=>a.forEach((c,j)=>{let t=i;if(i>0&&(j<2||(j==2&&sw[i-1])))t=i-1;else if(i<3&&(j>=n-2||(j==n-3&&sw[i])))t=i+1;res[t].push({...c,tier:t+1,str:cl(Math.round((c.str+base(t+1,c.c))/2+ri(-2,2)),35,92)})}));return res}
+function zone(t,pos,n,c){if(t==1){const[a,b,d]=euSl(c);if(pos<=a)return'z1';if(pos<=a+b)return'z2';if(pos<=a+b+d)return'z3'}else{if(pos<=2)return'za';if(pos==3)return'zp'}if(t<4){if(pos>n-2)return'zr';if(pos==n-2)return'zp'}return''}
+function tableScr(){show('table');const n=L.t.length,c=P.club.c,t=P.club.tier,lg=t==1?[['z1','Champions League'],['z2','Europa League'],['z3','Conference League']]:[['za','Automatic promotion']];if(t<4||t>1)lg.push(['zp','Play-offs']);if(t<4)lg.push(['zr','Relegation']);
+$('#table').innerHTML=`<div class='card'><h2>${TN[t]} · ${n}</h2><table><tr><th>#</th><th>Club</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GD</th><th>Pts</th></tr>`+sorted().map((x,i)=>`<tr class='${x===L.t[0]?'me ':''}${zone(t,i+1,n,c)}'><td>${i+1}</td><td>${x.n}</td><td>${x.P}</td><td>${x.W}</td><td>${x.D}</td><td>${x.L}</td><td>${x.GF-x.GA}</td><td>${x.Pts}</td></tr>`).join('')+`</table><div class='leg'>${lg.map(z=>`<div><span class='sq ${z[0]}'></span>${z[1]}${z[0]=='zp'?' (Baráž)':''}</div>`).join('')}</div></div><button class='s' onclick='hub()'>← BACK</button>`}
+const xc=v=>Math.max(1,Math.round((v-48)**1.6/22)),mc=v=>Math.round(v*v/10*(1+Math.max(0,v-65)**2/150));
+function trainScr(){show('train');const tw=P.tw||0;$('#train').innerHTML=`<div class='card'><h2>TRAINING</h2><p>⭐ ${P.xp} XP · 💰 £${P.money.toLocaleString()}</p><div class='row'><span>Energy</span><b>${Math.round(P.en)}%</b></div><div class='bar'><i style='width:${P.en}%'></i></div><p><small>Sessions this week ${tw}/2 · each costs 15 energy</small></p>`+Object.entries(P.st).map(([k,v])=>{const x=xc(v),c=mc(v),off=P.inj>0||tw>=2||P.en<15||P.xp<x||P.money<c||v>=99;return `<div class='row' style='margin:8px 0'><div style='flex:1'><div class='row'><span>${k}</span><b>${v}</b></div><div class='bar'><i style='width:${v}%'></i></div></div><button style='width:120px' ${off?'disabled':''} onclick='tr("${k}")'>+1<br>${x} XP · £${c.toLocaleString()}</button></div>`}).join('')+`<p><small>Higher stats cost much more XP and money. Rest between matches restores energy.</small></p></div><button class='s' onclick='hub()'>← BACK</button>`}
+function tr(k){const v=P.st[k],x=xc(v),c=mc(v);if(P.inj>0||(P.tw||0)>=2||P.en<15||P.xp<x||P.money<c||v>=99)return;P.xp-=x;P.money-=c;P.st[k]++;P.tw=(P.tw||0)+1;P.en-=15;if(P.en<35&&R()<.1*(1-.22*lvl('ph')))hurt('Hurt in training.');trustUpd(2);save();trainScr()}
+const SH=[['nu','STAFF','Nutritionist',[['Part-time Nutritionist',2500,0,40,0],['Club Nutritionist',9000,0,120,0],['Elite Nutrition Team',30000,0,300,0]]],['ph','STAFF','Physiotherapist',[['Club Physio',3000,0,50,0],['Senior Physiotherapist',11000,0,140,0],['Medical Team',35000,0,350,0]]],['ag','STAFF','Top Football Agent',[['Top Football Agent (+20% wage, more offers)',15000,0,200,0]]],['car','LIFESTYLE','Cars',[['Used Hatchback',8000,1,20,2],['Sports Coupe',60000,4,120,4],['Supercar',250000,10,500,6],['Hypercar',1200000,25,2000,8]]],['home','LIFESTYLE','Real Estate',[['Rented Flat',3000,1,80,3],['City Apartment',90000,4,200,5],['Luxury Villa',450000,12,700,7],['Private Mansion',2500000,30,2500,10]]],['gear','LIFESTYLE','Luxury Gear',[['Custom Cleats',4000,1,0,1],['Designer Watches',80000,5,50,2],['Private Jet',3000000,40,3000,3]]]],lvl=id=>id=='pt'?P.up.pt:(P.own[id]||0);
+function moodCalc(){let m=0;for(const it of SH){const l=lvl(it[0]);if(l)m+=it[3][l-1][4]}P.mood=cl(50+m*2,0,100)}
+function upk(){return SH.reduce((s,it)=>{const l=lvl(it[0]);return s+(l?it[3][l-1][3]:0)},0)}
+function weekly(){let fm=0;for(const it of SH){const l=lvl(it[0]);if(l)fm+=it[3][l-1][2]}P.money=Math.max(0,P.money-upk());P.fame+=fm;P.en=cl(P.en-12+25+lvl('nu')*5+lvl('ph')*6+lvl('pt')*2,0,100);P.tw=0;moodCalc()}
+function shopScr(){show('table');moodCalc();$('#table').innerHTML=`<div class='card'><h2>LUXURY SHOP</h2><p>💰 £${P.money.toLocaleString()} · Mood ${P.mood}% · Upkeep £${upk().toLocaleString()}/wk</p></div>`+SH.map((it,i)=>{const l=lvl(it[0]),nx=it[3][l],cur=l?it[3][l-1][0]:'-';return (i==0||SH[i-1][1]!=it[1]?`<h2 style='margin-top:10px'>${it[1]}</h2>`:'')+`<div style='margin:6px 0'><b>${it[2]}</b>: ${cur}</div><button class='s' ${!nx||P.money<nx[1]?'disabled':''} onclick='shop("${it[0]}")'>${nx?nx[0]+'<br><small>£'+nx[1].toLocaleString()+' · +'+nx[2]+' Fame/wk · -£'+nx[3]+'/wk'+(nx[4]?' · Mood +'+nx[4]*2:'')+'</small>':'MAX'}</button>`}).join('')+`<button class='s' onclick='hub()'>← BACK</button>`}
+function shop(id){const it=SH.find(x=>x[0]==id),l=lvl(id),nx=it[3][l];if(!nx||P.money<nx[1])return;P.money-=nx[1];P.own[id]=l+1;moodCalc();save();shopScr()}
+const LCN=[0,4,6,10];
+Object.assign(RC,{'1-2':'Racing Santander,Deportivo La Coruña,Real Zaragoza,Sporting Gijón,Real Oviedo,Málaga,Granada,Almería,Cádiz,Eibar,Burgos,Albacete,Tenerife,Mirandés,Córdoba,Huesca,Cartagena,Real Valladolid,Racing Ferrol,Castellón','1-3':'Real Murcia,Hércules,Sabadell,Gimnàstic,Real Unión,Ponferradina,Numancia,Lugo,Fuenlabrada,Alcorcón,Linares,Algeciras,Sevilla Atético,Real Sociedad B,Villarreal B,Celta Fortuna,Betis Deportivo,Bilbao Athletic,Barcelona Atlètic,Real Madrid Castilla','1-4':'Real Avilés,Compostela,Rayo Majadahonda,Marbella,Recreativo Huelva,Xerez,Ceuta,Melilla,Badalona,Terrassa,Cornellà,Europa,Atlético Madrileño,Navalcarnero,Talavera,Mérida,Don Benito,Poblense,Ibiza,Pontevedra','2-2':'Palermo,Sampdoria,Venezia,Cremonese,Spezia,Cesena,Pisa,Bari,Frosinone,Catanzaro,Reggiana,Modena,Mantova,Juve Stabia,Südtirol,Carrarese,Padova,Avellino,Brescia,Cittadella','2-3':'Triestina,Vicenza,Lecco,Perugia,Ternana,Pescara,Salernitana,Foggia,Benevento,Crotone,Catania,Messina,Trapani,Taranto,Pordenone,Pro Vercelli,Arezzo,Gubbio,Rimini,Sambenedettese','2-4':'Siena,Livorno,Novara,Alessandria,Piacenza,Pro Patria,Legnano,Varese,Chieti,Campobasso,Cavese,Nocerina,Savoia,Cosenza,Reggina,Akragas,Acireale,Siracusa,Paganese,Ostiamare','3-2':'Hannover 96,Hertha BSC,Fortuna Düsseldorf,1. FC Nürnberg,Karlsruher SC,Hansa Rostock,Holstein Kiel,SV Elversberg,SC Paderborn,Greuther Fürth,Darmstadt 98,Schalke 04,FC Magdeburg,Eintracht Braunschweig,1. FC Kaiserslautern,Preußen Münster,SSV Ulm,Jahn Regensburg','3-3':'Dynamo Dresden,Arminia Bielefeld,1860 München,MSV Duisburg,Erzgebirge Aue,Rot-Weiss Essen,Wehen Wiesbaden,Hallescher FC,SV Sandhausen,FC Ingolstadt,Viktoria Köln,Waldhof Mannheim,Energie Cottbus,Saarbrücken,VfL Osnabrück,SC Verl,Borussia Dortmund II,VfB Stuttgart II','3-4':'Rot-Weiß Oberhausen,Alemannia Aachen,Wuppertaler SV,Fortuna Köln,Chemnitzer FC,Carl Zeiss Jena,FSV Zwickau,Babelsberg 03,Lokomotive Leipzig,Kickers Offenbach,FC Homburg,Eintracht Trier,Rot-Weiß Erfurt,TSV Havelse,Hannover 96 II,Werder Bremen II,Holstein Kiel II,Hamburger SV II','4-2':'Saint-Étienne,Bordeaux,Sochaux,Caen,Guingamp,Amiens,Paris FC,Pau,Grenoble,Annecy,Laval,Dunkerque,Rodez,Troyes,Red Star,Clermont,Lorient,Martigues','4-3':'Nancy,Nîmes,Valenciennes,Le Mans,Quevilly-Rouen,Orléans,Versailles,Concarneau,Villefranche,Bastia,Aubagne,Niort,Châteauroux,Avranches,Sedan,Cholet,Fleury,Boulogne','4-4':'Bergerac,Épinal,Hyères,Montceau,Stade Briochin,Vierzon,Romorantin,Tarbes,Saint-Pryvé,Yzeure,Andrézieux,Chambly,Bourg-Péronnas,Thonon,Lyon-Duchère,Rouen,Jura Sud,Créteil','5-2':'Roda JC,VVV-Venlo,FC Emmen,De Graafschap,ADO Den Haag,FC Dordrecht,Cambuur,Almere City,MVV Maastricht,TOP Oss,FC Eindhoven,Helmond Sport,Telstar,FC Den Bosch,Vitesse,Jong Ajax,Jong PSV,Jong AZ','6-2':'Marítimo,Vizela,Paços de Ferreira,Tondela,Chaves,Académico de Viseu,Leixões,Feirense,Penafiel,Mafra,Académica,Oliveirense,Torreense,Varzim,Benfica B,Sporting B,Porto B,Portimonense','7-2':'Beerschot,Lommel,RWDM,Eupen,Lierse,Patro Eisden,Francs Borains,Seraing,Club NXT,Jong Genk,Oostende,Virton,RFC Liège,Deinze,Waasland-Beveren,Lokeren','8-2':'Bursaspor,Giresunspor,Adana Demirspor,Hatayspor,Ankaragücü,Altay,Ümraniyespor,Sakaryaspor,Boluspor,Çorum FK,Erzurumspor,Manisa FK,Pendikspor,Keçiörengücü,Şanlıurfaspor,Bandırmaspor,Amed,İstanbulspor,Tuzlaspor,Vanspor'});
+function hurt(why){const r=R(),k=r<.6?['Minor knock',ri(1,2)]:r<.9?['Muscle strain',ri(3,5)]:['Serious injury',ri(8,12)];P.inj=k[1];P.injn=k[0];ev('INJURY!',k[0]+': out for '+k[1]+' weeks.'+(why?' '+why:''));P.trust=cl(P.trust-2,0,100)}
+function injRoll(){const p=(.02+(P.en<35?.1+(35-P.en)/200:0))*(1-.22*lvl('ph'));if(R()<p)hurt()}
+function recover(){if(P.inj>0){P.inj-=lvl('ph')?1/.6:1;if(P.inj<=0){P.inj=0;ev('RECOVERED','You are fit again.')}}}
+function skipWeek(){const F=fix();G={m:90,me:0,op:0,rt:6,pg:0,pa:0,F,o:F.o,T:F.t||P.club,mm:[],st:1,res:1,rl:'Reserve Squad',inj:1,xp:0,mo:Math.round(wage()*.8),fm:0,mor:0};commit()}
+/* ---------- v8: international calendar, pause/resume, trophy history ---------- */
+let PZ=false;
+const CFN={UEFA:'Spain,France,Germany,Italy,Portugal,Belgium,Netherlands,Croatia,England,Czechia,Scotland,Austria,Switzerland,Greece,Denmark,Poland,Turkey,Ukraine,Serbia,Sweden,Norway,Hungary,Wales,Slovakia',CONMEBOL:'Brazil,Argentina,Uruguay,Colombia,Chile,Ecuador,Peru,Paraguay,Venezuela,Bolivia',CAF:'Nigeria,Senegal,Morocco,Egypt,Ghana,Cameroon,Ivory Coast,Algeria,Tunisia,Mali',AFC:'Japan,South Korea,Iran,Australia,Saudi Arabia,Qatar,Iraq,Uzbekistan,UAE,China',CONCACAF:'USA,Mexico,Canada,Costa Rica,Jamaica,Panama,Honduras'},CN2={UEFA:'European Championship (EURO)',CONMEBOL:'Copa América',CAF:'AFCON',AFC:'Asian Cup',CONCACAF:'Gold Cup'};
+const natN=()=>P.nat.replace(/^\S+\s+/,''),conf=()=>Object.keys(CFN).find(k=>CFN[k].split(',').includes(natN()))||'UEFA';
+const oppN=e=>pick((['cont','nl','wcq'].includes(e.id)?CFN[conf()]:Object.values(CFN).join(',')).split(',').filter(n=>n!=natN()));
+function mkEv(){const s=P.season%4,ev=[],E=(id,nm,at,st,g,th,sx,tr)=>ev.push({id,nm,at,st,g,th,s:sx,tr,i:0,pts:0}),GS=['Group 1/3','Group 2/3','Group 3/3'];
+if(P.contW&&s==3){E('fin','Finalissima',.06,['Final'],0,0,76,'fin');P.contW=0}
+if(s==0&&P.wcq!==false)E('wc','World Cup',.82,[...GS,'Round of 16','Quarter-Final','Semi-Final','Final'],3,4,70,'wc');
+if(s==0)P.wcq=undefined;
+if(s==2)E('cont',CN2[conf()],.82,[...GS,'Quarter-Final','Semi-Final','Final'],3,4,68,'co');
+if(s==1||s==3)E('nl','Nations League',.24,['Group 1/2','Group 2/2'],2,0,[76,70,64,58][P.nl||0]);
+if(s==3)E('wcq','World Cup Qualifiers',.55,['Qualifier 1/2','Qualifier 2/2'],2,2,64);
+if(R()<.4)E('fr','International Friendly',.4,['Friendly'],0,0,70);return ev}
+function intlPost(F,win,sc){const e=L.iv[F.ei],ko=e.i>=e.g,pw=G.res?(win?3:0):G.me>G.op?3:G.me==G.op?1:0,ti=e.nm+' '+e.st[e.i];let bd=sc;L.intl=null;
+if(!ko){e.pts+=pw;e.i++;if(e.i>=e.g){
+if(e.id=='nl'){const a=P.nl||0;if(e.pts>=4&&a>0)P.nl=a-1;else if(e.pts<=1&&a<3)P.nl=a+1;e.done=1;bd+=' · Nations League '+'ABCD'[a]+': '+e.pts+' pts'+((P.nl||0)<a?' (promoted)':(P.nl||0)>a?' (relegated)':'');if(a==0&&e.pts>=4)L.iv.push({id:'nlf',nm:'Nations League Finals',at:e.at,st:['Semi-Final','Final'],g:0,th:0,s:78,tr:'nl',i:0,pts:0})}
+else if(e.id=='wcq'){e.done=1;P.wcq=e.pts>=2;bd+=P.wcq?' · Qualified for the World Cup!':' · Failed to qualify'}
+else if(e.pts>=e.th)bd+=' · Through to the knockouts';else{e.done=1;bd+=' · Eliminated in the group'}}}
+else if(win){e.i++;if(e.i>=e.st.length){e.done=1;if(e.tr){P.tr[e.tr]=(P.tr[e.tr]||0)+1;addT(e.tr,fd(),'i'+e.id,1);if(e.id=='cont')P.contW=1;bd+=' · '+e.nm+' winners!'}}}else{e.done=1;bd+=' · Out'}
+news(ti,bd)}
+function togglePause(){if(!G||$('#match').classList.contains('hidden')||$('#res').innerHTML)return;PZ=!PZ;$('#pz').textContent=PZ?'▶️':'⏸️';if(PZ){clearInterval(tm);say('⏸ Paused')}else{say('▶ Resumed');if(!M)tm=setInterval(step,80)}}
+addEventListener('keydown',e=>{if((e.key=='p'||e.key=='P'||e.key=='Escape')&&!/INPUT|SELECT|TEXTAREA/.test(e.target.tagName)&&G&&!$('#match').classList.contains('hidden')){e.preventDefault();togglePause()}});
+const sl=()=>{const y=2025+P.season;return y+'/'+String((y+1)%100).padStart(2,'0')},fd=()=>'Final: '+G.me+'-'+G.op+(G.me==G.op?' (pens)':'')+' vs '+G.o.n;
+function cc(k){P.cc=P.cc||{};return P.cc[k]=P.cc[k]||{g:0,a:0,cs:0,rs:0,n:0}}
+function addT(k,d,ck,nat){const c=cc(ck||k);(P.th=P.th||[]).push({k,s:nat?String(2026+P.season):sl(),c:nat?natN():P.club.n,f:nat?P.nat.split(' ')[0]:CT[P.club.c][0],d,g:c.g,a:c.a,cs:c.cs,r:c.n?+(c.rs/c.n).toFixed(1):0})}
+const TR=[['lg','🏆','League titles'],['cup','🥇','Domestic Cup'],['lc','🥈','League Cup'],['sc','🛡️','Super Cup'],['cl','⭐','Champions League'],['el','🟠','Europa League'],['ecl','🟢','Conference League'],['wc','🌍','World Cup'],['co','🌐',''],['nl','🔷','Nations League'],['fin','⚔️','Finalissima'],['poty','🎖️','Player of Year'],['bd','🏅','Ballon d’Or']];
+const HT={lg:'Finish 1st in your league.',cup:'Win the domestic cup final.',lc:'Win the League Cup final (England, France, Portugal, Scotland).',sc:'Win the league or cup as a Tier 1 club, then win the Super Cup.',cl:'Finish near the top of Tier 1 and win the Champions League.',el:'Qualify for the Europa League and win the final.',ecl:'Qualify for the Conference League and win the final.',wc:'Reach OVR 72 for a call-up, qualify and win the World Cup.',co:'Win the continental championship with your national team.',nl:'Win the Nations League Finals with your national team.',fin:'Win the continental title, then win the Finalissima.',poty:'Average rating 7.5+ over a season.',bd:'Tier 1, average rating 8+ and OVR 80+.'};
+const trn=d=>d[0]=='co'?CN2[conf()]:d[2];
+function cnt(k){const M2={lg:'lg',cup:'cup',lc:'lc',sc:'sc',wc:'wc',co:'co',nl:'nl',fin:'fin',poty:'poty',bd:'bd'},h=(P.th||[]).filter(x=>x.k==k).length;let o=M2[k]?P.tr[M2[k]]||0:0;if(k=='cl'&&!(P.th||[]).some(x=>x.k=='el'||x.k=='ecl'))o=P.tr.eu||0;return Math.max(h,o)}
+function trophy(k){const d=TR.find(x=>x[0]==k),h=(P.th||[]).filter(x=>x.k==k),n=cnt(k),gk=P.pos=='GK'||P.pos=='DEF';$('#tmt').textContent=d[1]+' '+trn(d);
+$('#tmb').innerHTML=n?(h.length?h.slice().reverse().map(x=>`<div class='card'><b>${x.s}</b> · ${x.f||''} ${x.c}<br>${x.d}<br><small>Goals ${x.g} · Assists ${x.a}${gk?' · Clean sheets '+x.cs:''} · Average rating ${x.r}</small></div>`).join(''):`<p>${n}×</p><p><small>(details not recorded for earlier wins)</small></p>`):`<p><b>🔒 Locked</b></p><p>${HT[k]}</p>`;$('#tm').classList.remove('hidden')}
+function careerScr(){show('table');const av=P.rn?(P.rs/P.rn).toFixed(2):'-',gk=P.pos=='GK'||P.pos=='DEF',rw=(a,b)=>`<div class='row'><span>${a}</span><b>${b}</b></div>`;
+$('#table').innerHTML=`<div class='card'><h2>CAREER STATS</h2>${rw('Appearances',P.ap)}${rw('Goals',P.g)}${rw('Assists',P.a)}${gk?rw('Clean sheets',P.cs):''}${rw('Average rating',av)}${rw('Fame',P.fame)}</div><div class='card'><h2>TROPHY CABINET</h2><div class='trg'>${TR.map(d=>{const n=cnt(d[0]);return `<div onclick='trophy("${d[0]}")' style='text-align:center;cursor:pointer;opacity:${n?1:.35}'><div style='font-size:28px'>${d[1]}</div><b>${n}</b><br><small>${trn(d)}</small></div>`}).join('')}</div><p><small>Tap a trophy for its history</small></p></div><div class='card'><h2>TIMELINE</h2>${P.hist.map(h=>`<div>S${h.s}: ${h.c} (${TN[h.t]}) · #${h.p}</div>`).join('')}<div>S${P.season}: ${P.club.n} (${TN[P.club.tier]}) · current</div></div><div class='card'><h2>RECENT MATCHES</h2>${P.mh.length?P.mh.map(m=>`<div>${m}</div>`).join(''):'No matches yet.'}</div><button class='s' onclick='hub()'>← BACK</button>`}
+/* ---------- v9: 5 career save slots ---------- */
+let AS=-1,NS=0,DEL=-1;
+function slots(){try{const a=JSON.parse(localStorage.getItem('pr_slots'));if(Array.isArray(a))return Array.from({length:5},(_,i)=>a[i]||null)}catch(e){}return[null,null,null,null,null]}
+function putSlots(s){try{localStorage.setItem('pr_slots',JSON.stringify(s))}catch(e){}}
+function migSlots(){try{if(localStorage.getItem('pr_slots')==null){const o=JSON.parse(localStorage.getItem('pr1')),s=[null,null,null,null,null];if(o&&o.P)s[0]={P:o.P,L:o.L,ts:Date.now()};putSlots(s)}}catch(e){}}
+const esc=t=>String(t).replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
+function slotsScr(){show('slots');const s=slots();$('#slots').innerHTML=`<div class='card'><h2>CAREER SLOTS</h2></div>`+s.map((x,i)=>{if(!x)return `<div class='card'><h2>Save Slot ${i+1}</h2><p>+ Empty Slot</p><button class='s' onclick='newSlot(${i})'>Start New Career in this Slot</button></div>`;const p=x.P,o=Math.round(Object.values(p.st).reduce((a,b)=>a+b,0)/3),c=(CT[p.club.c]||CT[0])[0];return `<div class='card'><h2>Save Slot ${i+1}${i==AS?' \u2605':''}</h2><div class='row'><b>${esc(p.name)}</b><b class='px' style='background:#ffd23f;color:#222;padding:2px 6px;border-radius:4px;font-size:9px'>${p.pos}</b></div><p style='margin:4px 0'>OVR <b>${o}</b> \u00b7 Age ${p.age} \u00b7 Season ${p.season}<br>${c} ${esc(p.club.n)}<br><small>Saved: ${new Date(x.ts).toLocaleString()}</small></p><div class='ctl'><button onclick='loadSlot(${i})'>Load Career</button><button class='s' onclick='delSlot(${i})'>${DEL==i?'Confirm Delete?':'Delete Save'}</button></div></div>`}).join('')}
+function loadSlot(i){const x=slots()[i];if(!x)return;P=x.P;L=x.L;AS=i;DEL=-1;try{localStorage.setItem('pr_active',i)}catch(e){}mig();hub()}
+function newSlot(i){NS=i;DEL=-1;show('create')}
+function delSlot(i){if(DEL!=i){DEL=i;return slotsScr()}const s=slots();s[i]=null;putSlots(s);if(AS==i){AS=-1;P=null}DEL=-1;slotsScr()}
+function resetSave(){if(!confirm('Delete your saved career? This cannot be undone.'))return;if(AS>=0){const s=slots();s[AS]=null;putSlots(s);AS=-1;P=null}$('#modal').classList.add('hidden');slotsScr()}
+function impSave(){const s=prompt('Paste save data:');if(!s)return;try{const o=JSON.parse(s);if(!o.P||!o.L)throw 0;const sl=slots();let i=sl.findIndex(x=>!x);if(i<0)i=AS>=0?AS:0;P=o.P;L=o.L;mig();AS=i;save();$('#modal').classList.add('hidden');hub()}catch(e){alert('Invalid save data.')}}
+
+migSlots();initLang();slotsScr();
+</script><script>if('serviceWorker' in navigator&&location.protocol!=='file:')addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));</script>
+</body></html>
