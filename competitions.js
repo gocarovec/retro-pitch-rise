@@ -326,28 +326,40 @@
     return rows.sort((a, b) => b.pts - a.pts || b.gd - a.gd);
   }
 
-const FLAGS = {
-    en: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', es: '🇪🇸', it: '🇮🇹', de: '🇩🇪', fr: '🇫🇷',
-    nl: '🇳🇱', pt: '🇵🇹', be: '🇧🇪', tr: '🇹🇷', cz: '🇨🇿',
-    sc: '🏴󠁧󠁢󠁳󠁣󠁴󠁿', at: '🇦🇹', ch: '🇨🇭', gr: '🇬🇷', dk: '🇩🇰'
+const COUNTRY_INFO = {
+    en: { name: 'England', iso: 'gb-eng' },
+    es: { name: 'Spain', iso: 'es' },
+    it: { name: 'Italy', iso: 'it' },
+    de: { name: 'Germany', iso: 'de' },
+    fr: { name: 'France', iso: 'fr' },
+    nl: { name: 'Netherlands', iso: 'nl' },
+    pt: { name: 'Portugal', iso: 'pt' },
+    be: { name: 'Belgium', iso: 'be' },
+    tr: { name: 'Turkey', iso: 'tr' },
+    cz: { name: 'Czechia', iso: 'cz' },
+    sc: { name: 'Scotland', iso: 'gb-sct' },
+    at: { name: 'Austria', iso: 'at' },
+    ch: { name: 'Switzerland', iso: 'ch' },
+    gr: { name: 'Greece', iso: 'gr' },
+    dk: { name: 'Denmark', iso: 'dk' }
   };
 
   function getCountryMeta(code) {
-    const flag = FLAGS[code] || '🏳️';
+    const info = COUNTRY_INFO[code] || { name: code.toUpperCase(), iso: code };
+    const flagHtml = `<img src="https://flagcdn.com/24x18/${info.iso}.png" alt="${code}" style="width:18px;height:13px;border-radius:2px;vertical-align:middle;object-fit:cover;box-shadow:0 0 2px rgba(0,0,0,0.5);">`;
+    let tiers = ['1. Liga', '2. Liga', '3. Liga', '4. Liga'];
     try {
       if (typeof CT !== 'undefined' && Array.isArray(CT)) {
         const found = CT.find(c => c[0] === code);
-        if (found) {
-          return {
-            code: found[0],
-            flag,
-            name: found[1] || code.toUpperCase(),
-            tiers: found[3] || ['Tier 1', 'Tier 2', 'Tier 3', 'Tier 4']
-          };
-        }
+        if (found && Array.isArray(found[3])) tiers = found[3];
       }
     } catch (e) {}
-    return { code, flag, name: code.toUpperCase(), tiers: ['1. Liga', '2. Liga', '3. Liga', '4. Liga'] };
+    return {
+      code,
+      flag: flagHtml,
+      name: (typeof T === 'function' ? T(info.name) : info.name),
+      tiers
+    };
   }
 
   function renderModalContent() {
