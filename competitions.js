@@ -326,21 +326,28 @@
     return rows.sort((a, b) => b.pts - a.pts || b.gd - a.gd);
   }
 
+const FLAGS = {
+    en: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', es: '🇪🇸', it: '🇮🇹', de: '🇩🇪', fr: '🇫🇷',
+    nl: '🇳🇱', pt: '🇵🇹', be: '🇧🇪', tr: '🇹🇷', cz: '🇨🇿',
+    sc: '🏴󠁧󠁢󠁳󠁣󠁴󠁿', at: '🇦🇹', ch: '🇨🇭', gr: '🇬🇷', dk: '🇩🇰'
+  };
+
   function getCountryMeta(code) {
+    const flag = FLAGS[code] || '🏳️';
     try {
       if (typeof CT !== 'undefined' && Array.isArray(CT)) {
         const found = CT.find(c => c[0] === code);
         if (found) {
           return {
             code: found[0],
-            flag: found[1],
-            name: found[2],
-            tiers: found[4] || ['Tier 1', 'Tier 2', 'Tier 3', 'Tier 4']
+            flag,
+            name: found[1] || code.toUpperCase(),
+            tiers: found[3] || ['Tier 1', 'Tier 2', 'Tier 3', 'Tier 4']
           };
         }
       }
     } catch (e) {}
-    return { code, flag: '🏳️', name: code.toUpperCase(), tiers: ['1. Liga', '2. Liga', '3. Liga', '4. Liga'] };
+    return { code, flag, name: code.toUpperCase(), tiers: ['1. Liga', '2. Liga', '3. Liga', '4. Liga'] };
   }
 
   function renderModalContent() {
