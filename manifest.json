@@ -1,7 +1,7 @@
 {
-  "name": "Pitch Rise – Retro Soccer Career",
+  "name": "Retro Pitch Rise – Retro Football Career",
   "short_name": "Retro Pitch Rise",
-  "description": "Retro football career game: play any position and rise to stardom.",
+  "description": "Retro Football career game: play any position and rise to stardom.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
