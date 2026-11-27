@@ -86,7 +86,7 @@ if(m)mo.observe(m,{attributes:true,attributeFilter:['class']});
 if(r)mo.observe(r,{childList:true});
 if(z)mo.observe(z,{childList:true,characterData:true,subtree:true});
 new MutationObserver(paint).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});
-[$('#modal'),$('#app>.row')].forEach(n=>n&&new MutationObserver(ui).observe(n,{childList:true,subtree:true}));
+if($('#modal'))new MutationObserver(ui).observe($('#modal'),{attributes:true,attributeFilter:['class']});
 document.addEventListener('visibilitychange',()=>document.hidden?hush():sync());
 addEventListener('pagehide',hush);
 ui();sync();
