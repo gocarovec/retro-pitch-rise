@@ -539,34 +539,6 @@
         }
       });
     }
-
-    // Vložení tlačítka "Přepnout kariéru" do okna Nastavení (kulaté kolečko)
-    const modal = document.getElementById('modal');
-    const card = modal && !modal.classList.contains('hidden') ? modal.querySelector('.card') : null;
-    if (card && !document.getElementById('set_switch_career_btn')) {
-      // Ověříme, že jde o okno Nastavení (obsahuje výběr jazyka nebo reset kariéry)
-      const isSettings = card.innerHTML.includes('setLang') || card.innerHTML.includes('resetSave') || card.querySelector('#msc_vol');
-      if (isSettings) {
-        const swBtn = document.createElement('button');
-        swBtn.id = 'set_switch_career_btn';
-        swBtn.style.cssText = 'width:100%;margin:6px 0;background:rgba(255,210,63,0.18);border:1px solid #ffd23f;color:#ffd23f;font-weight:800;';
-        swBtn.textContent = '🔄 ' + t.switchBtn;
-        swBtn.onclick = () => {
-          modal.classList.add('hidden');
-          const hubEl = document.getElementById('hub');
-          if (hubEl) hubEl.classList.add('hidden');
-          if (typeof slotsScr === 'function') slotsScr();
-          const slotsEl = document.getElementById('slots');
-          if (slotsEl) slotsEl.classList.remove('hidden');
-        };
-        const bs = card.querySelectorAll(':scope > button');
-        card.insertBefore(swBtn, bs[bs.length - 1] || null);
-      }
-    } else if (document.getElementById('set_switch_career_btn')) {
-      const swBtn = document.getElementById('set_switch_career_btn');
-      const wanted = '🔄 ' + t.switchBtn;
-      if (swBtn.textContent !== wanted) swBtn.textContent = wanted;
-    }
   }
 
   // Sledujeme vykreslení hlavního menu (#hub) a otevření Nastavení (#modal)
