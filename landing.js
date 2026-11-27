@@ -1,4 +1,4 @@
-/* Pitch Rise – Úvodní obrazovka (HRÁT HRU + O HŘE) pro všech 14 jazyků */
+/* Retro Pitch Rise – Úvodní obrazovka (HRÁT HRU + O HŘE) pro všech 14 jazyků */
 (() => {
   'use strict';
 
